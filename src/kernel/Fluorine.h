@@ -52,5 +52,4 @@ struct Map {
 	Type	type;
 };
 
-
 #endif /* FLUORINE_H_ */
