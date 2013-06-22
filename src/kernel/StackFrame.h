@@ -8,10 +8,16 @@
 #ifndef STACKFRAME_H_
 #define STACKFRAME_H_
 
+#include "CoreType.h"
+
 namespace internals {
-    StackFrame* StackFrame_new();
-    StackFrame* StackFrame_current();
-    void StackFrame_delete(StackFrame* stackFrame);
+    void Stack_open();
+    void Stack_close();
+
+    StackFrame* StackFrame_top();
+    StackFrame* StackFrame_push();
+    void StackFrame_pop();
+    void StackFrame_set(Type type, Value value);
 }
 
 #endif /* STACKFRAME_H_ */

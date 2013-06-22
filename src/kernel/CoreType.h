@@ -9,11 +9,16 @@
 #define CORETYPE_H_
 
 #include <vector>
+#include "Point.h"
+#include "Size.h"
+#include "Rect.h"
 
 //----------------------------------------------------------------------------------------------
 // Forward Declarations
 class Object;
 class CallContext;
+struct List;
+struct Map;
 
 //----------------------------------------------------------------------------------------------
 // Type
@@ -42,6 +47,26 @@ struct StackFrame {
     Address framePointer;
     int argumentCount;
     int arguments[6];           // framePointer offsets
+};
+
+//----------------------------------------------------------------------------------------------
+// Argument
+struct Argument {
+    Type type;
+    union {
+        bool boolean;
+        int integer;
+        float real;
+        const char* string;
+        Point point;
+        Size size;
+        Rect rect;
+        List* list;
+        Map* map;
+        Object* object;
+        //TODO:
+        //Script* script;
+    };
 };
 
 //----------------------------------------------------------------------------------------------
