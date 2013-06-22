@@ -62,7 +62,7 @@ namespace internals {
         case IntType:
             frameOffset += 2;
             //argument->integer = (int) value;
-            argument->integer = static_cast<int>(value);
+            //argument->integer = static_cast<int>(value);
             break;
 
         case RealType:
