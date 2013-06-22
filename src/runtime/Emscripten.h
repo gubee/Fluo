@@ -8,12 +8,14 @@
 #ifndef EMSCRIPTEN_H_
 #define EMSCRIPTEN_H_
 
-#include "kernel/Fluorine.h"
+#if defined(F_RUNTIME_EMSCRIPTEN)
+#include "kernel/CoreType.h"
 
 //----------------------------------------------------------------------------------------------
 // StackFrame APIs
 extern "C" {
     StackFrame* StackFrame_new();
+    StackFrame* StackFrame_current();
     void StackFrame_delete(StackFrame* stackFrame);
 }
 
@@ -51,4 +53,5 @@ extern "C" {
 // Script APIs
 // TODO:
 
+#endif  // EMSCRIPTEN
 #endif /* EMSCRIPTEN_H_ */

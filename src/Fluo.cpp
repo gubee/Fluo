@@ -7,6 +7,9 @@
 //============================================================================
 
 #include <iostream>
+#include "kernel/CoreType.h"    // TODO: del
+#include "runtime/Emscripten.h"    // TODO: del
+
 using namespace std;
 
 int main() {
