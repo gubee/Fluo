@@ -1,3 +1,4 @@
 *.d
 *.o
-Debug/*
+Debug/Fluo
+Debug/src/*
