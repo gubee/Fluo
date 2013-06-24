@@ -9,6 +9,7 @@
 #define INVOKER_H_
 
 #include "CoreType.h"
+#include "StackFrame.h"
 
 //----------------------------------------------------------------------------------------------
 // Utilities
@@ -35,7 +36,7 @@ template <
     typename Argument2Type = void, typename Argument3Type = void
 >
 struct GenericInvoker : Invoker {
-    virtual void invoke(Object* object, CallContext* callContext) {
+    virtual void invoke(Object* object) {
     }
 };
 
@@ -55,7 +56,7 @@ struct GenericInvoker<ClassType, ReturnType, void, void, void, void> : Invoker {
         : constMember(member) {
     }
 
-    virtual void invoke(Object* object, CallContext* callContext) {
+    virtual void invoke(Object* object) {
         ReturnType result = (static_cast<ClassType*>(object)->*member)();
         // TODO:
         //CallStack < ReturnType > ::push(result);
@@ -73,7 +74,7 @@ template <
     typename Argument0Type
 >
 struct GenericInvoker<ClassType, ReturnType, Argument0Type, void, void, void> : Invoker {
-    virtual void invoke(Object* object, CallContext* callContext) {
+    virtual void invoke(Object* object) {
     }
 };
 
@@ -82,7 +83,7 @@ template <
     typename Argument0Type, typename Argument1Type
 >
 struct GenericInvoker<ClassType, ReturnType, Argument0Type, Argument1Type, void, void> : Invoker {
-    virtual void invoke(Object* object, CallContext* callContext) {
+    virtual void invoke(Object* object) {
     }
 };
 
@@ -91,7 +92,7 @@ template <
     typename Argument0Type, typename Argument1Type, typename Argument2Type
 >
 struct GenericInvoker<ClassType, ReturnType, Argument0Type, Argument1Type, Argument2Type, void> : Invoker {
-    virtual void invoke(Object* object, CallContext* callContext) {
+    virtual void invoke(Object* object) {
     }
 };
 
@@ -99,7 +100,7 @@ template <
     typename ClassType
 >
 struct GenericInvoker<ClassType, void, void, void, void, void> : Invoker {
-    virtual void invoke(Object* object, CallContext* callContext) {
+    virtual void invoke(Object* object) {
     }
 };
 
@@ -119,13 +120,12 @@ struct GenericInvoker<ClassType, void, Argument0Type, void, void, void> : Invoke
         : constMember(member) {
     }
 
-    virtual void invoke(Object* object, CallContext* callContext) {
+    virtual void invoke(Object* object) {
         typedef typename ArgumentType<Argument0Type>::type Type0;
-        // TODO:
-        //Type0 value = CallStack < Type0 > ::pop();
-        //Type0 value = Type0();
-        //callContext->get(2, value);
-        //(static_cast<ClassType*>(object)->*member)(value);
+
+        Type0 value = Type0();
+        internals::StackFrame_get(2, value);
+        (static_cast<ClassType*>(object)->*member)(value);
     }
 
     union {
@@ -139,7 +139,7 @@ template <
     typename Argument0Type, typename Argument1Type
 >
 struct GenericInvoker<ClassType, void, Argument0Type, Argument1Type, void, void> : Invoker {
-    virtual void invoke(Object* object, CallContext* callContext) {
+    virtual void invoke(Object* object) {
     }
 };
 
@@ -148,7 +148,7 @@ template <
     typename Argument0Type, typename Argument1Type, typename Argument2Type
 >
 struct GenericInvoker<ClassType, void, Argument0Type, Argument1Type, Argument2Type, void> : Invoker {
-    virtual void invoke(Object* object, CallContext* callContext) {
+    virtual void invoke(Object* object) {
     }
 };
 

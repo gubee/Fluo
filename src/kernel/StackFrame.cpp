@@ -5,16 +5,37 @@
  *      Author: gubee
  */
 
+#include <string>
 #include "StackFrame.h"
 
 #define STACK_SIZE                  1024
 #define FRAME_POINTER_OFFSET        (sizeof(StackFrame) / sizeof(int))
+#define POINTER_SIZE                (sizeof(void*) / sizeof(int))
 
 namespace internals {
     static Address baseStackPointer = 0;
     static Address stackPointer = 0;
-    static StackFrame* currentStackFrame = 0;
+    static StackFrame* topStackFrame = 0;
 
+    //----------------------------------------------------------------------------------------------
+    // Utilities
+    inline Argument* at(int index) {
+        int frameOffset = topStackFrame->arguments[index];
+        return reinterpret_cast<Argument*>(topStackFrame->framePointer + frameOffset);
+    }
+
+    inline Argument* push(int allocationSize) {
+        int index = topStackFrame->argumentCount;
+        int frameOffset = topStackFrame->arguments[index];
+        Argument* argument = reinterpret_cast<Argument*>(topStackFrame->framePointer + frameOffset);
+
+        topStackFrame->argumentCount += 1;
+        topStackFrame->arguments[index + 1] = frameOffset + allocationSize + 1;
+
+        return argument;
+    }
+
+    //----------------------------------------------------------------------------------------------
     void Stack_open() {
         baseStackPointer = new int[STACK_SIZE];
         stackPointer = baseStackPointer;
@@ -25,83 +46,114 @@ namespace internals {
     }
 
     StackFrame* StackFrame_top() {
-        return currentStackFrame;
+        return topStackFrame;
     }
 
     StackFrame* StackFrame_push() {
         StackFrame* stackFrame = reinterpret_cast<StackFrame*>(stackPointer);
-        stackFrame->previousFrame = currentStackFrame;
+        stackFrame->previousFrame = topStackFrame;
         stackFrame->framePointer = (stackPointer + FRAME_POINTER_OFFSET);
         stackFrame->argumentCount = 0;
         stackFrame->arguments[0] = 0;
-        currentStackFrame = stackFrame;
+        topStackFrame = stackFrame;
         return stackFrame;
     }
 
     void StackFrame_pop() {
-
+        // TODO:
+        //F_ASSERT(topStackFrame != 0);
+        topStackFrame = topStackFrame->previousFrame;
     }
 
-    void StackFrame_set(Type type, Value value) {
-        int index = currentStackFrame->argumentCount;
-        int frameOffset = currentStackFrame->arguments[index];
-        Argument* argument = reinterpret_cast<Argument*>(currentStackFrame->framePointer + frameOffset);
+    // TODO:
+//    void StackFrame_get(int index, bool& value);
+//    void StackFrame_get(int index, int& value);
+//    void StackFrame_get(int index, float& value);
+//    void StackFrame_get(int index, const char*& value);
+    void StackFrame_get(int index, std::string& value) {
+        Argument* argument = at(index);
+        value = argument->string;
+    }
+//    void StackFrame_get(int index, Point& value);
+//    void StackFrame_get(int index, Size& value);
+//    void StackFrame_get(int index, Rect& value);
+//    void StackFrame_get(int index, Object*& value);
+    // TODO:
+    //void StackFrame_get(int index, Script*& value);
 
-        argument->type = type;
-        switch (type) {
-        case UndefinedType:
-            frameOffset += 1;
-            break;
+    void StackFrame_set() {
+        Argument* argument = push(0);
+        argument->type = UndefinedType;
+    }
 
-        case BoolType:
-            frameOffset += 2;
-            argument->boolean = (bool) value;
-            argument->boolean = static_cast<bool>(value);
-            break;
+    void StackFrame_set(bool value) {
+        Argument* argument = push(1);
+        argument->type = BoolType;
+        argument->boolean = value;
+    }
 
-        case IntType:
-            frameOffset += 2;
-            //argument->integer = (int) value;
-            //argument->integer = static_cast<int>(value);
-            break;
+    void StackFrame_set(int value) {
+        Argument* argument = push(1);
+        argument->type = IntType;
+        argument->integer = value;
+    }
 
-        case RealType:
-            frameOffset += 2;
-            //argument->real = (float) value;
-            break;
+    void StackFrame_set(float value) {
+        Argument* argument = push(1);
+        argument->type = RealType;
+        argument->real = value;
+    }
 
-        case StringType:
-            //frameOffset += 2;
-            break;
-
-        case PointType:
-            frameOffset += 3;
-            break;
-
-        case SizeType:
-            frameOffset += 3;
-            break;
-
-        case RectType:
-            frameOffset += 5;
-            break;
-
-        case ListType:
-            frameOffset += 2;
-            break;
-
-        case MapType:
-            frameOffset += 2;
-            break;
-
-        case ScriptType:
-            frameOffset += 2;
-            break;
-
-        case ObjectType:
-            frameOffset += 2;
-            break;
+    void StackFrame_set(const char* value, std::size_t length, bool needsCopy) {
+        int stringLength = static_cast<int>(length);
+        int allocationSize = POINTER_SIZE;
+        if (needsCopy) {
+            if (stringLength == -1)
+                stringLength = strlen(value);
+            allocationSize += (stringLength + 4) >> 2;
         }
-        currentStackFrame->arguments[index + 1] = frameOffset;
+        Argument* argument = push(allocationSize);
+        argument->type = StringType;
+        if (needsCopy) {
+            char* buffer = argument->string;
+            memcpy(buffer, value, stringLength);
+            buffer[stringLength] = 0;
+        } else {
+            argument->constString = value;
+        }
     }
+
+    // TODO:
+//    void StackFrame_set(const std::string& value, bool needsCopy = true);
+
+    void StackFrame_set(const Point& value) {
+        Argument* argument = push(2);
+        argument->type = PointType;
+        argument->point = value;
+    }
+
+    void StackFrame_set(const Size& value) {
+        Argument* argument = push(2);
+        argument->type = SizeType;
+        argument->size = value;
+    }
+
+    void StackFrame_set(const Rect& value) {
+        Argument* argument = push(4);
+        argument->type = RectType;
+        argument->rect = value;
+    }
+
+    // TODO:
+//    void StackFrame_set(const List* value);
+//    void StackFrame_set(const Map* value);
+
+    void StackFrame_set(const Object* value) {
+        Argument* argument = push(POINTER_SIZE);
+        argument->type = ObjectType;
+        argument->constObject = value;
+    }
+
+    // TODO:
+    //void StackFrame_set(const Script* value);
 }

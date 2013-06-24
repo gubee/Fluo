@@ -16,7 +16,6 @@
 //----------------------------------------------------------------------------------------------
 // Forward Declarations
 class Object;
-class CallContext;
 struct List;
 struct Map;
 
@@ -57,7 +56,7 @@ struct Argument {
         bool boolean;
         int integer;
         float real;
-        const char* string;
+        char* string;
         Point point;
         Size size;
         Rect rect;
@@ -66,6 +65,13 @@ struct Argument {
         Object* object;
         //TODO:
         //Script* script;
+
+        const char* constString;
+        const List* constList;
+        const Map* constMap;
+        const Object* constObject;
+        //TODO:
+        //const Script* constScript;
     };
 };
 
@@ -88,7 +94,7 @@ struct Invoker {
     virtual ~Invoker() {
     }
 
-    virtual void invoke(Object* object, CallContext* callContext) = 0;
+    virtual void invoke(Object* object) = 0;
 };
 
 //----------------------------------------------------------------------------------------------
