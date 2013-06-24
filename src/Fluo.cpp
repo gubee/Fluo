@@ -27,7 +27,8 @@ int main() {
 	internals::StackFrame_push();
 	internals::StackFrame_set();
     internals::StackFrame_set();
-	internals::StackFrame_set(s.c_str(), s.size());
+	//internals::StackFrame_set(s.c_str(), s.size());
+    internals::StackFrame_set(s.c_str(), -1, false);
 
 	Object* o = new Object();
 	const MetaClass* metaClass = o->metaClass();
@@ -36,6 +37,7 @@ int main() {
 
 	cout << ": " << o->objectName() << endl;
 
+	internals::StackFrame_pop();
 
 	return 0;
 }
