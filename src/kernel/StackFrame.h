@@ -10,6 +10,13 @@
 
 #include "CoreType.h"
 
+//----------------------------------------------------------------------------------------------
+// Forward Declarations
+struct Point;
+struct Size;
+struct Rect;
+
+//----------------------------------------------------------------------------------------------
 namespace internals {
     void Stack_open();
     void Stack_close();

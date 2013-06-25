@@ -16,30 +16,14 @@
 using namespace std;
 
 int main() {
-	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
-	cout << sizeof(void*) << sizeof(int) << sizeof(char) << endl;
-
-	int* p = new int[16];
-	cout << p << "\n" << p + 12 << endl;
-
     Object* o = new Object();
-    o->setObjectName("XXX");
 	std::string s = "Hello";
-
-	std::cout << ">> " << o << std::endl;
 
 	internals::Stack_open();
 	internals::StackFrame_push();
     internals::StackFrame_set(o);
-
-    Object* oo = 0;
-    internals::StackFrame_get(0, oo);
-    std::cout << ">> " << oo << std::endl;
-
 	internals::StackFrame_set(s.c_str(), s.size());
     //internals::StackFrame_set(s.c_str(), (std::size_t)-1, false);
-    internals::StackFrame_get(0, oo);
-    std::cout << ">> " << oo << std::endl;
 
 	const MetaClass* metaClass = o->metaClass();
 	MetaMethod metaMethod = metaClass->methods[1];

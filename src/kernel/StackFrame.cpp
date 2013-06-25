@@ -6,6 +6,9 @@
  */
 
 #include <string>
+#include "Point.h"
+#include "Size.h"
+#include "Rect.h"
 #include "StackFrame.h"
 
 
@@ -69,22 +72,51 @@ namespace internals {
         stackPointer = reinterpret_cast<Address>(topStackFrame);
     }
 
-    // TODO:
-//    void StackFrame_get(int index, bool& value);
-//    void StackFrame_get(int index, int& value);
-//    void StackFrame_get(int index, float& value);
-//    void StackFrame_get(int index, const char*& value);
+    void StackFrame_get(int index, bool& value) {
+        Argument* argument = at(index);
+        value = argument->boolean;
+    }
+
+    void StackFrame_get(int index, int& value) {
+        Argument* argument = at(index);
+        value = argument->integer;
+    }
+
+    void StackFrame_get(int index, float& value) {
+        Argument* argument = at(index);
+        value = argument->real;
+    }
+
+    void StackFrame_get(int index, const char*& value) {
+        Argument* argument = at(index);
+        value = argument->string.pointer;
+    }
+
     void StackFrame_get(int index, std::string& value) {
         Argument* argument = at(index);
         value = argument->string.pointer;
     }
-//    void StackFrame_get(int index, Point& value);
-//    void StackFrame_get(int index, Size& value);
-//    void StackFrame_get(int index, Rect& value);
+
+    void StackFrame_get(int index, Point& value) {
+        Argument* argument = at(index);
+        value = *reinterpret_cast<Point*>(argument->geometry);
+    }
+
+    void StackFrame_get(int index, Size& value) {
+        Argument* argument = at(index);
+        value = *reinterpret_cast<Size*>(argument->geometry);
+    }
+
+    void StackFrame_get(int index, Rect& value) {
+        Argument* argument = at(index);
+        value = *reinterpret_cast<Rect*>(argument->geometry);
+    }
+
     void StackFrame_get(int index, Object*& value) {
         Argument* argument = at(index);
         value = argument->object;
     }
+
     // TODO:
     //void StackFrame_get(int index, Script*& value);
 
@@ -150,19 +182,19 @@ namespace internals {
     void StackFrame_set(const Point& value) {
         Argument* argument = push(2);
         argument->type = PointType;
-        argument->point = value;
+        new (argument->geometry) Point(value);
     }
 
     void StackFrame_set(const Size& value) {
         Argument* argument = push(2);
         argument->type = SizeType;
-        argument->size = value;
+        new (argument->geometry) Size(value);
     }
 
     void StackFrame_set(const Rect& value) {
         Argument* argument = push(4);
         argument->type = RectType;
-        argument->rect = value;
+        new (argument->geometry) Rect(value);
     }
 
     // TODO:

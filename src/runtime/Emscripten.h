@@ -5,8 +5,8 @@
  *      Author: gubee
  */
 
-#ifndef EMSCRIPTEN_H_
-#define EMSCRIPTEN_H_
+#ifndef RUNTIME_EMSCRIPTEN_H_
+#define RUNTIME_EMSCRIPTEN_H_
 
 #if defined(F_RUNTIME_EMSCRIPTEN)
 #include "kernel/CoreType.h"
@@ -14,9 +14,9 @@
 //----------------------------------------------------------------------------------------------
 // StackFrame APIs
 extern "C" {
-    StackFrame* StackFrame_new();
-    StackFrame* StackFrame_current();
-    void StackFrame_delete(StackFrame* stackFrame);
+    StackFrame* StackFrame_top();
+    StackFrame* StackFrame_push();
+    void StackFrame_pop();
 }
 
 //----------------------------------------------------------------------------------------------
@@ -42,6 +42,14 @@ extern "C" {
 // TODO:
 
 //----------------------------------------------------------------------------------------------
+// Method APIs
+// TODO:
+
+//----------------------------------------------------------------------------------------------
+// Enum APIs
+// TODO:
+
+//----------------------------------------------------------------------------------------------
 // Object APIs
 // TODO:
 
@@ -54,4 +62,4 @@ extern "C" {
 // TODO:
 
 #endif  // EMSCRIPTEN
-#endif /* EMSCRIPTEN_H_ */
+#endif /* RUNTIME_EMSCRIPTEN_H_ */

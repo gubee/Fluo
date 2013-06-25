@@ -5,10 +5,10 @@
  *      Author: gubee
  */
 
-#ifndef JAVASCRIPTCORE_H_
-#define JAVASCRIPTCORE_H_
+#ifndef RUNTIME_JAVASCRIPTCORE_H_
+#define RUNTIME_JAVASCRIPTCORE_H_
 
 
 
 
-#endif /* JAVASCRIPTCORE_H_ */
+#endif /* RUNTIME_JAVASCRIPTCORE_H_ */

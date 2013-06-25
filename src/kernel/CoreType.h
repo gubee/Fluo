@@ -9,9 +9,6 @@
 #define CORETYPE_H_
 
 #include <vector>
-#include "Point.h"
-#include "Size.h"
-#include "Rect.h"
 
 //----------------------------------------------------------------------------------------------
 // Forward Declarations
@@ -68,10 +65,7 @@ struct Argument {
             char* pointer;
             char buffer[1];
         } string;
-        //char* string;
-        Point point;
-        Size size;
-        Rect rect;
+        float geometry[4];
         List* list;
         Map* map;
         Object* object;

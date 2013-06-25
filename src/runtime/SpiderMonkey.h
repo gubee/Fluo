@@ -5,10 +5,10 @@
  *      Author: gubee
  */
 
-#ifndef SPIDERMONKEY_H_
-#define SPIDERMONKEY_H_
+#ifndef RUNTIME_SPIDERMONKEY_H_
+#define RUNTIME_SPIDERMONKEY_H_
 
 
 
 
-#endif /* SPIDERMONKEY_H_ */
+#endif /* RUNTIME_SPIDERMONKEY_H_ */

@@ -5,10 +5,10 @@
  *      Author: gubee
  */
 
-#ifndef FLASCC_H_
-#define FLASCC_H_
+#ifndef RUNTIME_FLASCC_H_
+#define RUNTIME_FLASCC_H_
 
 
 
 
-#endif /* FLASCC_H_ */
+#endif /* RUNTIME_FLASCC_H_ */
