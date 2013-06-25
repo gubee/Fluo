@@ -9,13 +9,12 @@
 #define METAOBJECT_H_
 
 #include "CoreType.h"
-#include "CallContext.h"
 #include "Invoker.h"
 
 //----------------------------------------------------------------------------------------------
 // Utilities
-int propertyOffsetOf(const MetaClass& metaClass);
 int methodOffsetOf(const MetaClass& metaClass);
+void addMetaMethod(MetaClass& metaClass, const char* name, MethodType type, Invoker* invoker);
 
 template <typename ClassType>
 struct ObjectFactory {
@@ -23,18 +22,6 @@ struct ObjectFactory {
         return new ClassType();
     }
 };
-
-template <typename ClassType, typename ReturnType, typename ArgumentType>
-void addMetaProperty(MetaClass& metaClass, const char* name, ReturnType (ClassType::*getter)() const, void (ClassType::*setter)(ArgumentType)) {
-    typedef GenericInvoker<ClassType, ReturnType> Getter;
-    typedef GenericInvoker<ClassType, void, ArgumentType> Setter;
-
-    MetaProperty metaProperty;
-    metaProperty.name = name;
-    metaProperty.getter = new Getter(getter);
-    metaProperty.setter = new Setter(setter);
-    metaClass.properties.push_back(metaProperty);
-}
 
 //----------------------------------------------------------------------------------------------
 #define BEGIN_CLASS(classtype, basetype)                                \
@@ -53,7 +40,6 @@ void addMetaProperty(MetaClass& metaClass, const char* name, ReturnType (ClassTy
             metaClass.name = #classtype;                                \
             metaClass.base = basetype::staticMetaClass();               \
             metaClass.create = &ObjectFactory<ClassType>::create;       \
-            metaClass.propertyOffset = propertyOffsetOf(metaClass);     \
             metaClass.methodOffset = methodOffsetOf(metaClass);
 
 #define END_CLASS()                                                     \
@@ -61,10 +47,8 @@ void addMetaProperty(MetaClass& metaClass, const char* name, ReturnType (ClassTy
         }
 
 #define PROPERTY(type, name, getter, setter)                            \
-    addMetaProperty(metaClass, name, &ClassType::getter, &ClassType::setter);
-
-#define PROPERTY_READONLY(type, name, getter)                           \
-    addMetaProperty(metaClass, name, &ClassType::getter, 0);
+    addMetaMethod(metaClass, name, ReadProperty, newInvoker(&ClassType::getter));   \
+    addMetaMethod(metaClass, name, WriteProperty, newInvoker(&ClassType::setter));
 
 #define BEGIN_ENUM(enumName)                                            \
     {                                                                   \

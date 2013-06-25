@@ -22,3 +22,6 @@ std::string Object::objectName() const {
 void Object::setObjectName(const std::string& value) {
     m_objectName = value;
 }
+
+void Object::none() {
+}

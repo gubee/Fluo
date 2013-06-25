@@ -8,6 +8,7 @@
 #include <string>
 #include "StackFrame.h"
 
+
 #define STACK_SIZE                  1024
 #define FRAME_POINTER_OFFSET        (sizeof(StackFrame) / sizeof(int))
 #define POINTER_SIZE                (sizeof(void*) / sizeof(int))
@@ -31,6 +32,7 @@ namespace internals {
 
         topStackFrame->argumentCount += 1;
         topStackFrame->arguments[index + 1] = frameOffset + allocationSize + 1;
+        stackPointer += (allocationSize + 1);
 
         return argument;
     }
@@ -56,6 +58,7 @@ namespace internals {
         stackFrame->argumentCount = 0;
         stackFrame->arguments[0] = 0;
         topStackFrame = stackFrame;
+        stackPointer += FRAME_POINTER_OFFSET;
         return stackFrame;
     }
 
@@ -63,6 +66,7 @@ namespace internals {
         // TODO:
         //F_ASSERT(topStackFrame != 0);
         topStackFrame = topStackFrame->previousFrame;
+        stackPointer = reinterpret_cast<Address>(topStackFrame);
     }
 
     // TODO:
@@ -72,12 +76,15 @@ namespace internals {
 //    void StackFrame_get(int index, const char*& value);
     void StackFrame_get(int index, std::string& value) {
         Argument* argument = at(index);
-        value = argument->string;
+        value = argument->string.pointer;
     }
 //    void StackFrame_get(int index, Point& value);
 //    void StackFrame_get(int index, Size& value);
 //    void StackFrame_get(int index, Rect& value);
-//    void StackFrame_get(int index, Object*& value);
+    void StackFrame_get(int index, Object*& value) {
+        Argument* argument = at(index);
+        value = argument->object;
+    }
     // TODO:
     //void StackFrame_get(int index, Script*& value);
 
@@ -110,12 +117,12 @@ namespace internals {
         if (needsCopy) {
             if (stringLength == -1)
                 stringLength = strlen(value);
-            allocationSize += (stringLength + 4) >> 2;
+            allocationSize += (stringLength + 5) >> 2;   // last '\0' character
         }
         Argument* argument = push(allocationSize);
         argument->type = StringType;
         if (needsCopy) {
-            char* buffer = argument->string;
+            char* buffer = argument->string.pointer = argument->string.buffer;
             memcpy(buffer, value, stringLength);
             buffer[stringLength] = 0;
         } else {
@@ -123,8 +130,22 @@ namespace internals {
         }
     }
 
-    // TODO:
-//    void StackFrame_set(const std::string& value, bool needsCopy = true);
+    void StackFrame_set(const std::string& value, bool needsCopy) {
+        int stringLength = static_cast<int>(value.size());
+        int allocationSize = POINTER_SIZE;
+        if (needsCopy) {
+            allocationSize += (stringLength + 5) >> 2;   // last '\0' character
+        }
+        Argument* argument = push(allocationSize);
+        argument->type = StringType;
+        if (needsCopy) {
+            char* buffer = argument->string.pointer = argument->string.buffer;
+            memcpy(buffer, value.c_str(), stringLength);
+            buffer[stringLength] = 0;
+        } else {
+            argument->constString = value.c_str();
+        }
+    }
 
     void StackFrame_set(const Point& value) {
         Argument* argument = push(2);

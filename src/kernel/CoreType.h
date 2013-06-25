@@ -40,6 +40,14 @@ typedef void* Value;
 typedef int* Address;
 
 //----------------------------------------------------------------------------------------------
+// MethodType
+enum MethodType {
+    ReadProperty,
+    WriteProperty,
+    Method
+};
+
+//----------------------------------------------------------------------------------------------
 // StackFrame
 struct StackFrame {
     StackFrame* previousFrame;
@@ -56,7 +64,11 @@ struct Argument {
         bool boolean;
         int integer;
         float real;
-        char* string;
+        struct {
+            char* pointer;
+            char buffer[1];
+        } string;
+        //char* string;
         Point point;
         Size size;
         Rect rect;
@@ -73,7 +85,11 @@ struct Argument {
         //TODO:
         //const Script* constScript;
     };
-};
+}
+#if !defined(F_RUNTIME_EMSCRIPTEN) && !defined(F_RUNTIME_FLASCC)
+__attribute__((aligned(4), packed))
+#endif
+;
 
 //----------------------------------------------------------------------------------------------
 // List
@@ -94,7 +110,7 @@ struct Invoker {
     virtual ~Invoker() {
     }
 
-    virtual void invoke(Object* object) = 0;
+    virtual void invoke() = 0;
 };
 
 //----------------------------------------------------------------------------------------------
@@ -105,17 +121,10 @@ struct MetaEnum {
 };
 
 //----------------------------------------------------------------------------------------------
-// MetaProperty
-struct MetaProperty {
-    const char* name;
-    Invoker* getter;
-    Invoker* setter;
-};
-
-//----------------------------------------------------------------------------------------------
 // MetaMethod
 struct MetaMethod {
     const char* name;
+    MethodType type;
     Invoker* function;
 };
 
@@ -125,9 +134,7 @@ struct MetaClass {
     const char* name;
     const MetaClass* base;
     Object* (*create)();
-    int propertyOffset;
     int methodOffset;
-    std::vector<MetaProperty> properties;
     std::vector<MetaMethod> methods;
     std::vector<MetaEnum> enums;
 };

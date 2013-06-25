@@ -23,6 +23,9 @@ public:
     std::string objectName() const;
     void setObjectName(const std::string& value);
 
+protected:
+    void none();
+
 private:
     std::string     m_objectName;
 };
