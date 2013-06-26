@@ -8,7 +8,7 @@
 #ifndef RECT_H_
 #define RECT_H_
 
-#include <math.h>
+#include <cmath>
 #include <algorithm>
 #include "point.h"
 
@@ -192,10 +192,10 @@ struct Rect {
     }
 
     Rect& align() {
-        float xmin = floorf(x);
-        float xmax = ceilf(x + width);
-        float ymin = floorf(y);
-        float ymax = ceilf(y + height);
+        float xmin = std::floor(x);
+        float xmax = std::ceil(x + width);
+        float ymin = std::floor(y);
+        float ymax = std::ceil(y + height);
         x = xmin;
         y = ymin;
         width = xmax - xmin;

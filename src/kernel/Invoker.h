@@ -31,9 +31,9 @@ struct ArgumentType<const T&> {
 //----------------------------------------------------------------------------------------------
 // GenericInvoker
 template <
-    typename ClassType, typename ReturnType,
-    typename Argument0Type = void, typename Argument1Type = void,
-    typename Argument2Type = void, typename Argument3Type = void
+    typename Class, typename Return,
+    typename Argument0 = void, typename Argument1 = void,
+    typename Argument2 = void, typename Argument3 = void
 >
 struct GenericInvoker : Invoker {
     virtual void invoke() {
@@ -42,11 +42,11 @@ struct GenericInvoker : Invoker {
 
 //----------------------------------------------------------------------------------------------
 template <
-    typename ClassType, typename ReturnType
+    typename Class, typename Return
 >
-struct GenericInvoker<ClassType, ReturnType, void, void, void, void> : Invoker {
-    typedef ReturnType (ClassType::*MemberPtr)();
-    typedef ReturnType (ClassType::*ConstMemberPtr)() const;
+struct GenericInvoker<Class, Return, void, void, void, void> : Invoker {
+    typedef Return (Class::*MemberPtr)();
+    typedef Return (Class::*ConstMemberPtr)() const;
 
     GenericInvoker(MemberPtr member)
         : member(member) {
@@ -59,7 +59,7 @@ struct GenericInvoker<ClassType, ReturnType, void, void, void, void> : Invoker {
     virtual void invoke() {
         Object* object = 0;
         internals::StackFrame_get(0, object);
-        ReturnType result = (static_cast<ClassType*>(object)->*member)();
+        Return result = (static_cast<Class*>(object)->*member)();
         internals::StackFrame_set(result);
     }
 
@@ -70,38 +70,38 @@ struct GenericInvoker<ClassType, ReturnType, void, void, void, void> : Invoker {
 };
 
 template <
-    typename ClassType, typename ReturnType,
-    typename Argument0Type
+    typename Class, typename Return,
+    typename Argument0
 >
-struct GenericInvoker<ClassType, ReturnType, Argument0Type, void, void, void> : Invoker {
+struct GenericInvoker<Class, Return, Argument0, void, void, void> : Invoker {
     virtual void invoke() {
     }
 };
 
 template <
-    typename ClassType, typename ReturnType,
-    typename Argument0Type, typename Argument1Type
+    typename Class, typename Return,
+    typename Argument0, typename Argument1
 >
-struct GenericInvoker<ClassType, ReturnType, Argument0Type, Argument1Type, void, void> : Invoker {
+struct GenericInvoker<Class, Return, Argument0, Argument1, void, void> : Invoker {
     virtual void invoke() {
     }
 };
 
 template <
-    typename ClassType, typename ReturnType,
-    typename Argument0Type, typename Argument1Type, typename Argument2Type
+    typename Class, typename Return,
+    typename Argument0, typename Argument1, typename Argument2
 >
-struct GenericInvoker<ClassType, ReturnType, Argument0Type, Argument1Type, Argument2Type, void> : Invoker {
+struct GenericInvoker<Class, Return, Argument0, Argument1, Argument2, void> : Invoker {
     virtual void invoke() {
     }
 };
 
 template <
-    typename ClassType
+    typename Class
 >
-struct GenericInvoker<ClassType, void, void, void, void, void> : Invoker {
-    typedef void (ClassType::*MemberPtr)();
-    typedef void (ClassType::*ConstMemberPtr)() const;
+struct GenericInvoker<Class, void, void, void, void, void> : Invoker {
+    typedef void (Class::*MemberPtr)();
+    typedef void (Class::*ConstMemberPtr)() const;
 
     GenericInvoker(MemberPtr member)
         : member(member) {
@@ -114,7 +114,7 @@ struct GenericInvoker<ClassType, void, void, void, void, void> : Invoker {
     virtual void invoke() {
         Object* object = 0;
         internals::StackFrame_get(0, object);
-        (static_cast<ClassType*>(object)->*member)();
+        (static_cast<Class*>(object)->*member)();
     }
 
     union {
@@ -124,12 +124,12 @@ struct GenericInvoker<ClassType, void, void, void, void, void> : Invoker {
 };
 
 template <
-    typename ClassType,
-    typename Argument0Type
+    typename Class,
+    typename Argument0
 >
-struct GenericInvoker<ClassType, void, Argument0Type, void, void, void> : Invoker {
-    typedef void (ClassType::*MemberPtr)(Argument0Type);
-    typedef void (ClassType::*ConstMemberPtr)(Argument0Type) const;
+struct GenericInvoker<Class, void, Argument0, void, void, void> : Invoker {
+    typedef void (Class::*MemberPtr)(Argument0);
+    typedef void (Class::*ConstMemberPtr)(Argument0) const;
 
     GenericInvoker(MemberPtr member)
         : member(member) {
@@ -140,13 +140,13 @@ struct GenericInvoker<ClassType, void, Argument0Type, void, void, void> : Invoke
     }
 
     virtual void invoke() {
-        typedef typename ArgumentType<Argument0Type>::type Type0;
+        typedef typename ArgumentType<Argument0>::type Type0;
 
         Object* object = 0;
         Type0 value0 = Type0();
         internals::StackFrame_get(0, object);
         internals::StackFrame_get(1, value0);
-        (static_cast<ClassType*>(object)->*member)(value0);
+        (static_cast<Class*>(object)->*member)(value0);
     }
 
     union {
@@ -156,113 +156,113 @@ struct GenericInvoker<ClassType, void, Argument0Type, void, void, void> : Invoke
 };
 
 template <
-    typename ClassType,
-    typename Argument0Type, typename Argument1Type
+    typename Class,
+    typename Argument0, typename Argument1
 >
-struct GenericInvoker<ClassType, void, Argument0Type, Argument1Type, void, void> : Invoker {
-    virtual void invoke(Object* object) {
+struct GenericInvoker<Class, void, Argument0, Argument1, void, void> : Invoker {
+    virtual void invoke() {
     }
 };
 
 template <
-    typename ClassType,
-    typename Argument0Type, typename Argument1Type, typename Argument2Type
+    typename Class,
+    typename Argument0, typename Argument1, typename Argument2
 >
-struct GenericInvoker<ClassType, void, Argument0Type, Argument1Type, Argument2Type, void> : Invoker {
-    virtual void invoke(Object* object) {
+struct GenericInvoker<Class, void, Argument0, Argument1, Argument2, void> : Invoker {
+    virtual void invoke() {
     }
 };
 
 //----------------------------------------------------------------------------------------------
 template <
-    typename ClassType, typename ReturnType
+    typename Class, typename Return
 >
-Invoker* newInvoker(ReturnType (ClassType::*method)()) {
-    typedef GenericInvoker<ClassType, ReturnType> InvokerType;
+Invoker* newInvoker(Return (Class::*method)()) {
+    typedef GenericInvoker<Class, Return> InvokerType;
     return new InvokerType(method);
 }
 
 template <
-    typename ClassType, typename ReturnType,
-    typename Argument0Type
+    typename Class, typename Return,
+    typename Argument0
 >
-Invoker* newInvoker(ReturnType (ClassType::*method)(Argument0Type)) {
-    typedef GenericInvoker<ClassType, ReturnType, Argument0Type> InvokerType;
+Invoker* newInvoker(Return (Class::*method)(Argument0)) {
+    typedef GenericInvoker<Class, Return, Argument0> InvokerType;
     return new InvokerType(method);
 }
 
 template <
-    typename ClassType, typename ReturnType,
-    typename Argument0Type, typename Argument1Type
+    typename Class, typename Return,
+    typename Argument0, typename Argument1
 >
-Invoker* newInvoker(ReturnType (ClassType::*method)(Argument0Type, Argument1Type)) {
-    typedef GenericInvoker<ClassType, ReturnType, Argument0Type, Argument1Type> InvokerType;
+Invoker* newInvoker(Return (Class::*method)(Argument0, Argument1)) {
+    typedef GenericInvoker<Class, Return, Argument0, Argument1> InvokerType;
     return new InvokerType(method);
 }
 
 template <
-    typename ClassType, typename ReturnType,
-    typename Argument0Type, typename Argument1Type,
-    typename Argument2Type
+    typename Class, typename Return,
+    typename Argument0, typename Argument1,
+    typename Argument2
 >
-Invoker* newInvoker(ReturnType (ClassType::*method)(Argument0Type, Argument1Type, Argument2Type)) {
-    typedef GenericInvoker<ClassType, ReturnType, Argument0Type, Argument1Type, Argument2Type> InvokerType;
+Invoker* newInvoker(Return (Class::*method)(Argument0, Argument1, Argument2)) {
+    typedef GenericInvoker<Class, Return, Argument0, Argument1, Argument2> InvokerType;
     return new InvokerType(method);
 }
 
 template <
-    typename ClassType, typename ReturnType,
-    typename Argument0Type, typename Argument1Type,
-    typename Argument2Type, typename Argument3Type
+    typename Class, typename Return,
+    typename Argument0, typename Argument1,
+    typename Argument2, typename Argument3
 >
-Invoker* newInvoker(ReturnType (ClassType::*method)(Argument0Type, Argument1Type, Argument2Type, Argument3Type)) {
-    typedef GenericInvoker<ClassType, ReturnType, Argument0Type, Argument1Type, Argument2Type, Argument3Type> InvokerType;
+Invoker* newInvoker(Return (Class::*method)(Argument0, Argument1, Argument2, Argument3)) {
+    typedef GenericInvoker<Class, Return, Argument0, Argument1, Argument2, Argument3> InvokerType;
     return new InvokerType(method);
 }
 
 template <
-    typename ClassType, typename ReturnType
+    typename Class, typename Return
 >
-Invoker* newInvoker(ReturnType (ClassType::*method)() const) {
-    typedef GenericInvoker<ClassType, ReturnType> InvokerType;
+Invoker* newInvoker(Return (Class::*method)() const) {
+    typedef GenericInvoker<Class, Return> InvokerType;
     return new InvokerType(method);
 }
 
 template <
-    typename ClassType, typename ReturnType,
-    typename Argument0Type
+    typename Class, typename Return,
+    typename Argument0
 >
-Invoker* newInvoker(ReturnType (ClassType::*method)(Argument0Type) const) {
-    typedef GenericInvoker<ClassType, ReturnType, Argument0Type> InvokerType;
+Invoker* newInvoker(Return (Class::*method)(Argument0) const) {
+    typedef GenericInvoker<Class, Return, Argument0> InvokerType;
     return new InvokerType(method);
 }
 
 template <
-    typename ClassType, typename ReturnType,
-    typename Argument0Type, typename Argument1Type
+    typename Class, typename Return,
+    typename Argument0, typename Argument1
 >
-Invoker* newInvoker(ReturnType (ClassType::*method)(Argument0Type, Argument1Type) const) {
-    typedef GenericInvoker<ClassType, ReturnType, Argument0Type, Argument1Type> InvokerType;
+Invoker* newInvoker(Return (Class::*method)(Argument0, Argument1) const) {
+    typedef GenericInvoker<Class, Return, Argument0, Argument1> InvokerType;
     return new InvokerType(method);
 }
 
 template <
-    typename ClassType, typename ReturnType,
-    typename Argument0Type, typename Argument1Type,
-    typename Argument2Type
+    typename Class, typename Return,
+    typename Argument0, typename Argument1,
+    typename Argument2
 >
-Invoker* newInvoker(ReturnType (ClassType::*method)(Argument0Type, Argument1Type, Argument2Type) const) {
-    typedef GenericInvoker<ClassType, ReturnType, Argument0Type, Argument1Type, Argument2Type> InvokerType;
+Invoker* newInvoker(Return (Class::*method)(Argument0, Argument1, Argument2) const) {
+    typedef GenericInvoker<Class, Return, Argument0, Argument1, Argument2> InvokerType;
     return new InvokerType(method);
 }
 
 template <
-    typename ClassType, typename ReturnType,
-    typename Argument0Type, typename Argument1Type,
-    typename Argument2Type, typename Argument3Type
+    typename Class, typename Return,
+    typename Argument0, typename Argument1,
+    typename Argument2, typename Argument3
 >
-Invoker* newInvoker(ReturnType (ClassType::*method)(Argument0Type, Argument1Type, Argument2Type, Argument3Type) const) {
-    typedef GenericInvoker<ClassType, ReturnType, Argument0Type, Argument1Type, Argument2Type, Argument3Type> InvokerType;
+Invoker* newInvoker(Return (Class::*method)(Argument0, Argument1, Argument2, Argument3) const) {
+    typedef GenericInvoker<Class, Return, Argument0, Argument1, Argument2, Argument3> InvokerType;
     return new InvokerType(method);
 }
 

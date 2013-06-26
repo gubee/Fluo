@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <string>
+#include <stdint.h>
 #include "kernel/CoreType.h"    // TODO: del
 #include "runtime/Emscripten.h"    // TODO: del
 #include "kernel/StackFrame.h"    // TODO: del
@@ -26,8 +27,8 @@ int main() {
     //internals::StackFrame_set(s.c_str(), (std::size_t)-1, false);
 
 	const MetaClass* metaClass = o->metaClass();
-	MetaMethod metaMethod = metaClass->methods[1];
-	metaMethod.function->invoke();
+	MetaMethod* metaMethod = metaClass->methods[1];
+	metaMethod->function->invoke();
 
 	cout << ": " << o->objectName() << endl;
 

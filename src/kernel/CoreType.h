@@ -8,6 +8,7 @@
 #ifndef CORETYPE_H_
 #define CORETYPE_H_
 
+#include <inttypes.h>
 #include <vector>
 
 //----------------------------------------------------------------------------------------------
@@ -35,6 +36,11 @@ enum Type {
 
 typedef void* Value;
 typedef int* Address;
+typedef intptr_t Handle;
+
+#define cast(type, from)            reinterpret_cast<type*>(from)
+#define asAddress(from)             reinterpret_cast<Address>(from)
+#define asHandle(from)              reinterpret_cast<Handle>(from)
 
 //----------------------------------------------------------------------------------------------
 // MethodType
@@ -129,8 +135,8 @@ struct MetaClass {
     const MetaClass* base;
     Object* (*create)();
     int methodOffset;
-    std::vector<MetaMethod> methods;
-    std::vector<MetaEnum> enums;
+    std::vector<MetaMethod*> methods;
+    std::vector<MetaEnum*> enums;
 };
 
 struct none {

@@ -25,13 +25,13 @@ namespace internals {
     // Utilities
     inline Argument* at(int index) {
         int frameOffset = topStackFrame->arguments[index];
-        return reinterpret_cast<Argument*>(topStackFrame->framePointer + frameOffset);
+        return cast(Argument, topStackFrame->framePointer + frameOffset);
     }
 
     inline Argument* push(int allocationSize) {
         int index = topStackFrame->argumentCount;
         int frameOffset = topStackFrame->arguments[index];
-        Argument* argument = reinterpret_cast<Argument*>(topStackFrame->framePointer + frameOffset);
+        Argument* argument = cast(Argument, topStackFrame->framePointer + frameOffset);
 
         topStackFrame->argumentCount += 1;
         topStackFrame->arguments[index + 1] = frameOffset + allocationSize + 1;
@@ -55,7 +55,7 @@ namespace internals {
     }
 
     StackFrame* StackFrame_push() {
-        StackFrame* stackFrame = reinterpret_cast<StackFrame*>(stackPointer);
+        StackFrame* stackFrame = cast(StackFrame, stackPointer);
         stackFrame->previousFrame = topStackFrame;
         stackFrame->framePointer = (stackPointer + FRAME_POINTER_OFFSET);
         stackFrame->argumentCount = 0;
@@ -69,7 +69,7 @@ namespace internals {
         // TODO:
         //F_ASSERT(topStackFrame != 0);
         topStackFrame = topStackFrame->previousFrame;
-        stackPointer = reinterpret_cast<Address>(topStackFrame);
+        stackPointer = asAddress(topStackFrame);
     }
 
     void StackFrame_get(int index, bool& value) {
@@ -99,17 +99,17 @@ namespace internals {
 
     void StackFrame_get(int index, Point& value) {
         Argument* argument = at(index);
-        value = *reinterpret_cast<Point*>(argument->geometry);
+        value = *cast(Point, argument->geometry);
     }
 
     void StackFrame_get(int index, Size& value) {
         Argument* argument = at(index);
-        value = *reinterpret_cast<Size*>(argument->geometry);
+        value = *cast(Size, argument->geometry);
     }
 
     void StackFrame_get(int index, Rect& value) {
         Argument* argument = at(index);
-        value = *reinterpret_cast<Rect*>(argument->geometry);
+        value = *cast(Rect, argument->geometry);
     }
 
     void StackFrame_get(int index, Object*& value) {

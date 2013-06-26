@@ -12,9 +12,9 @@ int methodOffsetOf(const MetaClass& metaClass) {
 }
 
 void addMetaMethod(MetaClass& metaClass, const char* name, MethodType type, Invoker* invoker) {
-    MetaMethod metaMethod;
-    metaMethod.name = name;
-    metaMethod.type = type;
-    metaMethod.function = invoker;
+    MetaMethod* metaMethod = new MetaMethod();
+    metaMethod->name = name;
+    metaMethod->type = type;
+    metaMethod->function = invoker;
     metaClass.methods.push_back(metaMethod);
 }
