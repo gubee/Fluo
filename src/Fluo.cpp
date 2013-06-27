@@ -9,10 +9,11 @@
 #include <iostream>
 #include <string>
 #include <stdint.h>
+#include <v8.h> // TODO: del
 #include "kernel/CoreType.h"    // TODO: del
-#include "runtime/Emscripten.h"    // TODO: del
 #include "kernel/StackFrame.h"    // TODO: del
 #include "items/Object.h"   // TODO: del
+#include "Engine.h"
 
 using namespace std;
 
@@ -33,6 +34,15 @@ int main() {
 	cout << ": " << o->objectName() << endl;
 
 	internals::StackFrame_pop();
+
+    Engine engine;
+    engine.startup();
+
+    const char* ss = "var m = Class_new('ABC', 0); Class_name(m);";
+
+    v8::HandleScope handleScope(v8::Isolate::GetCurrent());
+	v8::Handle<v8::Script> script = v8::Script::Compile(v8::String::New(ss));
+	script->Run();
 
 	return 0;
 }

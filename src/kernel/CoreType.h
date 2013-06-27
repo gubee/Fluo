@@ -43,6 +43,13 @@ typedef intptr_t Handle;
 #define asHandle(from)              reinterpret_cast<Handle>(from)
 
 //----------------------------------------------------------------------------------------------
+// ClassType
+enum ClassType {
+    NativeClass,
+    DynamicClass
+};
+
+//----------------------------------------------------------------------------------------------
 // MethodType
 enum MethodType {
     ReadProperty,
@@ -123,17 +130,18 @@ struct MetaEnum {
 //----------------------------------------------------------------------------------------------
 // MetaMethod
 struct MetaMethod {
-    const char* name;
     MethodType type;
+    const char* name;
     Invoker* function;
 };
 
 //----------------------------------------------------------------------------------------------
 // MetaClass
 struct MetaClass {
+    ClassType type;
     const char* name;
     const MetaClass* base;
-    Object* (*create)();
+    Object* (*create)(const MetaClass*);
     int methodOffset;
     std::vector<MetaMethod*> methods;
     std::vector<MetaEnum*> enums;
