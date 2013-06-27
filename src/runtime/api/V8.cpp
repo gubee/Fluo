@@ -10,13 +10,6 @@
 #include "kernel/CoreObject.h"
 #include "runtime/Runtime.h"
 #include "V8.h"
-#include <iostream> // TODO: del
-
-namespace internals {
-    const char* ToCString(const v8::String::Utf8Value& value) {
-        return static_cast<const char*>(*value);
-    }
-}
 
 //----------------------------------------------------------------------------------------------
 // StackFrame APIs
@@ -98,28 +91,40 @@ void Class_defineMethod(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
 
 void Class_name(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     v8::HandleScope handleScope;
-    MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
+    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
     arguments.GetReturnValue().Set(v8::String::New(metaClass->name));
 }
 
 void Class_base(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->base)));
 }
 
 void Class_methodCount(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::Uint32::New(metaClass->methods.size()));
 }
 
 void Class_method(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
+    std::size_t index = arguments[1]->Uint32Value();
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->methods[index])));
 }
 
 void Class_enumCount(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::Uint32::New(metaClass->enums.size()));
 }
 
 void Class_enum(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
+    std::size_t index = arguments[1]->Uint32Value();
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->enums[index])));
 }
 
 //----------------------------------------------------------------------------------------------
@@ -149,15 +154,22 @@ void Enum_values(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
 //----------------------------------------------------------------------------------------------
 // Object APIs
 void Object_new(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
+    Object* object = metaClass->create(metaClass);
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(object)));
 }
 
 void Object_delete(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const Object* object = cast(Object, arguments[0]->IntegerValue());
+    delete object;
 }
 
 void Object_class(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const Object* object = cast(Object, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(object->metaClass())));
 }
 
 //----------------------------------------------------------------------------------------------

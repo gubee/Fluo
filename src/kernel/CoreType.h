@@ -11,11 +11,19 @@
 #include <inttypes.h>
 #include <vector>
 
+#if defined(F_RUNTIME_EMSCRIPTEN)
+#elif defined(F_RUNTIME_FLASCC)
+#elif defined(F_RUNTIME_V8)
+#include <v8.h>
+#elif defined(F_RUNTIME_SPIDERMONKEY)
+#elif defined(F_RUNTIME_JAVASCRIPTCORE)
+#endif
+
 //----------------------------------------------------------------------------------------------
 // Forward Declarations
 class Object;
-struct List;
-struct Map;
+class List;
+class Map;
 
 //----------------------------------------------------------------------------------------------
 // Type
@@ -34,7 +42,20 @@ enum Type {
     ObjectType
 };
 
+#if defined(F_RUNTIME_EMSCRIPTEN)
 typedef void* Value;
+typedef void* ValueReference;
+#elif defined(F_RUNTIME_FLASCC)
+#elif defined(F_RUNTIME_V8)
+typedef v8::Handle<v8::Value> Value;
+typedef const v8::Handle<v8::Value>& ValueReference;
+#elif defined(F_RUNTIME_SPIDERMONKEY)
+typedef JS::Value Value;
+typedef const JS::Value& ValueReference;
+#elif defined(F_RUNTIME_JAVASCRIPTCORE)
+typedef JSC::Value Value;
+typedef const JSC::Value& ValueReference;
+#endif
 typedef int* Address;
 typedef intptr_t Handle;
 
@@ -100,17 +121,58 @@ __attribute__((aligned(4), packed))
 
 //----------------------------------------------------------------------------------------------
 // List
-struct List {
-    Type type;
+class List {
+public:
+    explicit List(Type type)
+        : m_type(type) {
+    }
+
+    virtual ~List() {
+    }
+
+    inline Type type() const {
+        return m_type;
+    }
+
+    virtual void append(ValueReference value) = 0;
+    virtual void remove(ValueReference value, bool removeAll = true) = 0;
+    virtual void removeAt(int index) = 0;
+    virtual int count() const = 0;
+    virtual int indexOf(ValueReference value) const = 0;
+    virtual Value at(int index) const = 0;
+    virtual void setAt(int index, ValueReference value) = 0;
+
+protected:
+    Type m_type;
 };
 
 //----------------------------------------------------------------------------------------------
 // Map
-struct Map {
-    Type type;
+class Map {
+public:
+    explicit Map(Type type)
+        : m_type(type) {
+    }
+
+    virtual ~Map() {
+    }
+
+    inline Type type() const {
+        return m_type;
+    }
+
+    virtual void insert(const std::string& name, ValueReference value) = 0;
+    virtual void remove(const std::string& name) = 0;
+    virtual int count() const = 0;
+    virtual const List* names() const = 0;
+    virtual Value value(const std::string& name) const = 0;
+
+protected:
+    Type m_type;
 };
 
 //----------------------------------------------------------------------------------------------
+// Invoker
 struct Invoker {
     Invoker() {
     }

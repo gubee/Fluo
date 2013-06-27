@@ -17,6 +17,8 @@
 
 using namespace std;
 
+
+
 int main() {
     Object* o = new Object();
 	std::string s = "Hello";

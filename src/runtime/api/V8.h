@@ -9,7 +9,6 @@
 #define RUNTIME_V8_H_
 
 #if defined(F_RUNTIME_V8)
-#include <v8.h>
 #include "kernel/CoreType.h"
 
 //----------------------------------------------------------------------------------------------
@@ -105,7 +104,7 @@ void Enum_values(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 /*
     [PROTOTYPES]
     Object* Object_new(const MetaClass* metaClass);
-    Object* Object_delete(const Object* object);
+    void Object_delete(const Object* object);
     const MetaClass* Object_class(const Object* object);
  */
 void Object_new(const v8::FunctionCallbackInfo<v8::Value>& arguments);
