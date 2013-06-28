@@ -155,7 +155,7 @@ namespace internals {
         argument->type = StringType;
         if (needsCopy) {
             char* buffer = argument->string.pointer = argument->string.buffer;
-            memcpy(buffer, value, stringLength);
+            std::memcpy(buffer, value, stringLength);
             buffer[stringLength] = 0;
         } else {
             argument->constString = value;
@@ -172,7 +172,7 @@ namespace internals {
         argument->type = StringType;
         if (needsCopy) {
             char* buffer = argument->string.pointer = argument->string.buffer;
-            memcpy(buffer, value.c_str(), stringLength);
+            std::memcpy(buffer, value.c_str(), stringLength);
             buffer[stringLength] = 0;
         } else {
             argument->constString = value.c_str();

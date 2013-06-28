@@ -9,6 +9,7 @@
 #define CORETYPE_H_
 
 #include <inttypes.h>
+#include <string>
 #include <vector>
 
 #if defined(F_RUNTIME_EMSCRIPTEN)
@@ -42,26 +43,156 @@ enum Type {
     ObjectType
 };
 
-#if defined(F_RUNTIME_EMSCRIPTEN)
-typedef void* Value;
-typedef void* ValueReference;
-#elif defined(F_RUNTIME_FLASCC)
-#elif defined(F_RUNTIME_V8)
-typedef v8::Handle<v8::Value> Value;
-typedef const v8::Handle<v8::Value>& ValueReference;
-#elif defined(F_RUNTIME_SPIDERMONKEY)
-typedef JS::Value Value;
-typedef const JS::Value& ValueReference;
-#elif defined(F_RUNTIME_JAVASCRIPTCORE)
-typedef JSC::Value Value;
-typedef const JSC::Value& ValueReference;
-#endif
+#define DEFINE_TYPE(type, code)      template <> struct TypeOf<type> { enum { value = code }; };
+
+template <typename T>
+struct TypeOf {
+    enum {
+        value = UndefinedType
+    };
+};
+
+DEFINE_TYPE(bool, BoolType);
+DEFINE_TYPE(int, IntType);
+DEFINE_TYPE(float, RealType);
+DEFINE_TYPE(const char*, StringType);
+DEFINE_TYPE(std::string, StringType);
+DEFINE_TYPE(List*, ListType);
+DEFINE_TYPE(Map*, MapType);
+// TODO:
+//DEFINE_TYPE(Script*, ScriptType);
+DEFINE_TYPE(Object*, ObjectType);
+
+//----------------------------------------------------------------------------------------------
+// Address / Handle
 typedef int* Address;
 typedef intptr_t Handle;
 
 #define cast(type, from)            reinterpret_cast<type*>(from)
 #define asAddress(from)             reinterpret_cast<Address>(from)
 #define asHandle(from)              reinterpret_cast<Handle>(from)
+
+//----------------------------------------------------------------------------------------------
+// Value / ScriptValue
+
+#if defined(F_RUNTIME_EMSCRIPTEN)
+typedef void* Value;
+typedef void* ValueReference;
+// TODO: ScriptValue
+#elif defined(F_RUNTIME_FLASCC)
+#elif defined(F_RUNTIME_V8)
+typedef v8::Handle<v8::Value> Value;
+typedef const v8::Handle<v8::Value>& ValueReference;
+typedef v8::Handle<v8::Value> ScriptValue;
+#elif defined(F_RUNTIME_SPIDERMONKEY)
+typedef JS::Value Value;
+typedef const JS::Value& ValueReference;
+typedef JS::Value ScriptValue;
+#elif defined(F_RUNTIME_JAVASCRIPTCORE)
+typedef JSC::Value Value;
+typedef const JSC::Value& ValueReference;
+typedef JSC::Value ScriptValue;
+#endif
+
+template <typename T>
+inline T fromValue(ValueReference value) {
+    return T();
+}
+
+template <typename T, typename U>
+inline Value toValue(U value) {
+    return Value();
+}
+
+#if defined(F_RUNTIME_EMSCRIPTEN)
+#elif defined(F_RUNTIME_FLASCC)
+#elif defined(F_RUNTIME_V8)
+
+template <>
+inline bool fromValue<bool>(ValueReference value) {
+    return value->BooleanValue();
+}
+
+template <>
+inline Value toValue<bool>(bool value) {
+    return v8::Boolean::New(value);
+}
+
+template <>
+inline int fromValue<int>(ValueReference value) {
+    return value->Int32Value();
+}
+
+template <>
+inline Value toValue<int>(int value) {
+    return v8::Integer::New(value);
+}
+
+template <>
+inline float fromValue<float>(ValueReference value) {
+    return value->NumberValue();
+}
+
+template <>
+inline Value toValue<float>(float value) {
+    return v8::Number::New(value);
+}
+
+template <>
+inline std::string fromValue<std::string>(ValueReference value) {
+    const v8::String::Utf8Value utf8(value);
+    return *utf8;
+}
+
+template <>
+inline Value toValue<std::string>(const std::string& value) {
+    return v8::String::New(value.c_str());
+}
+
+template <>
+inline List* fromValue<List*>(ValueReference value) {
+    return 0;
+}
+
+template <>
+inline Value toValue<List*>(List* value) {
+    return v8::Number::New(asHandle(value));
+}
+
+template <>
+inline Map* fromValue<Map*>(ValueReference value) {
+    return 0;
+}
+
+template <>
+inline Value toValue<Map*>(Map* value) {
+    return v8::Number::New(asHandle(value));
+}
+
+// TODO:
+//template <>
+//inline Script* fromValue<Script*>(ValueReference value) {
+//    return 0;
+//}
+
+//template <>
+//inline Value toValue<Script*>(Script* value) {
+//    return v8::Number::New(asHandle(value));
+//}
+
+template <>
+inline Object* fromValue<Object*>(ValueReference value) {
+    return cast(Object, value->IntegerValue());
+}
+
+template <>
+inline Value toValue<Object*>(Object* value) {
+    return v8::Number::New(asHandle(value));
+}
+
+#elif defined(F_RUNTIME_SPIDERMONKEY)
+#elif defined(F_RUNTIME_JAVASCRIPTCORE)
+#endif
 
 //----------------------------------------------------------------------------------------------
 // ClassType

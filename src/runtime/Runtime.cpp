@@ -37,7 +37,13 @@ namespace internals {
         F_API(List_at),
         F_API(List_setAt),
         // Map APIs
-        // TODO:
+        F_API(Map_new),
+        F_API(Map_delete),
+        F_API(Map_insert),
+        F_API(Map_remove),
+        F_API(Map_count),
+        F_API(Map_names),
+        F_API(Map_value),
         // Class APIs
         F_API(Class_new),
         F_API(Class_defineMethod),

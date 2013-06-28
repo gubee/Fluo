@@ -33,13 +33,13 @@ void StackFrame_pop(const v8::FunctionCallbackInfo<v8::Value>& arguments);
     [PROTOTYPES]
     List* List_new(Type type);
     void List_delete(List* list);
-    void List_append(List* list, Value value);
-    void List_remove(List* list, Value value, bool removeAll);
+    void List_append(List* list, ValueReference value);
+    void List_remove(List* list, ValueReference value, bool removeAll);
     void List_removeAt(List* list, int index);
     int List_count(List* list);
-    int List_indexOf(List* list, Value value);
+    int List_indexOf(List* list, ValueReference value);
     Value List_at(List* list, int index);
-    void List_setAt(List* list, int index, Value value);
+    void List_setAt(List* list, int index, ValueReference value);
 */
 void List_new(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 void List_delete(const v8::FunctionCallbackInfo<v8::Value>& arguments);
@@ -53,7 +53,23 @@ void List_setAt(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 
 //----------------------------------------------------------------------------------------------
 // Map APIs
-// TODO:
+/*
+     [PROTOTYPES]
+     Map* Map_new(Type type);
+     void Map_delete(Map* map);
+     void Map_insert(Map* map, const char* name, ValueReference value);
+     void Map_remove(Map* map, const char* name);
+     int Map_count(Map* map);
+     const List* Map_names(Map* map);
+     Value Map_value(Map* map, const char* name);
+ */
+void Map_new(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Map_delete(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Map_insert(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Map_remove(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Map_count(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Map_names(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Map_value(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 
 //----------------------------------------------------------------------------------------------
 // Class APIs

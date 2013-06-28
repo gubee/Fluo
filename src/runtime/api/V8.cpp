@@ -32,40 +32,97 @@ void List_new(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
 }
 
 void List_delete(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    List* list = cast(List, arguments[0]->IntegerValue());
+    delete list;
 }
 
 void List_append(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    List* list = cast(List, arguments[0]->IntegerValue());
+    list->append(arguments[1]);
 }
 
 void List_remove(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    List* list = cast(List, arguments[0]->IntegerValue());
+    list->remove(arguments[1], arguments.Length() > 2 ? arguments[2]->BooleanValue() : false);
 }
 
 void List_removeAt(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    List* list = cast(List, arguments[0]->IntegerValue());
+    list->append(arguments[1]);
 }
 
 void List_count(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const List* list = cast(List, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::Int32::New(list->count()));
 }
 
 void List_indexOf(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const List* list = cast(List, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::Int32::New(list->indexOf(arguments[1])));
 }
 
 void List_at(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const List* list = cast(List, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(list->at(arguments[1]->Int32Value()));
 }
 
 void List_setAt(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    List* list = cast(List, arguments[0]->IntegerValue());
+    list->setAt(arguments[1]->Int32Value(), arguments[2]);
 }
 
 //----------------------------------------------------------------------------------------------
 // Map APIs
-// TODO:
+void Map_new(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    // TODO:
+}
+
+void Map_delete(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
+    Map* map = cast(Map, arguments[0]->IntegerValue());
+    delete map;
+}
+
+void Map_insert(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
+    Map* map = cast(Map, arguments[0]->IntegerValue());
+    const v8::String::Utf8Value name(arguments[1]);
+    map->insert(*name, arguments[2]);
+}
+
+void Map_remove(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
+    Map* map = cast(Map, arguments[0]->IntegerValue());
+    const v8::String::Utf8Value name(arguments[1]);
+    map->remove(*name);
+}
+
+void Map_count(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
+    const Map* map = cast(Map, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::Int32::New(map->count()));
+}
+
+void Map_names(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
+    const Map* map = cast(Map, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(map->names())));
+}
+
+void Map_value(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
+    const Map* map = cast(Map, arguments[0]->IntegerValue());
+    const v8::String::Utf8Value name(arguments[1]);
+    arguments.GetReturnValue().Set(map->value(*name));
+}
 
 //----------------------------------------------------------------------------------------------
 // Class APIs
@@ -73,7 +130,7 @@ void Class_new(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     v8::HandleScope handleScope;
     const v8::String::Utf8Value name(arguments[0]);
     char* className = new char[name.length() + 1];
-    strcpy(className, *name);
+    std::strcpy(className, *name);
     MetaClass* baseClass = cast(MetaClass, arguments[0]->IntegerValue());
 
     MetaClass* metaClass = new MetaClass;
@@ -117,7 +174,7 @@ void Class_method(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
 void Class_enumCount(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     v8::HandleScope handleScope;
     const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-    arguments.GetReturnValue().Set(v8::Uint32::New(metaClass->enums.size()));
+    arguments.GetReturnValue().Set(v8::Int32::New(metaClass->enums.size()));
 }
 
 void Class_enum(const v8::FunctionCallbackInfo<v8::Value>& arguments) {

@@ -12,6 +12,7 @@
 #include <v8.h> // TODO: del
 #include "kernel/CoreType.h"    // TODO: del
 #include "kernel/StackFrame.h"    // TODO: del
+#include "kernel/List.h"    // TODO: del
 #include "items/Object.h"   // TODO: del
 #include "Engine.h"
 
