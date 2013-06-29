@@ -51,7 +51,7 @@ int main() {
 	script->Run();
 
 	List* lb = new BoolList();
-//    List* li = new IntList();
+    List* li = new IntList();
 //    List* lr = new RealList();
 //    List* ls = new StringList();
 //    List* ll = new ListList();
