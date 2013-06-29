@@ -11,44 +11,7 @@
 #include <string>
 #include <map>
 #include "CoreType.h"
-
-//----------------------------------------------------------------------------------------------
-// TypeMapIterator<>
-template <typename T>
-class TypedMapIterator : public Iterator {
-public:
-    typedef std::map<std::string, T> Container;
-    typedef typename Container::const_iterator Iterator;
-    typedef TypeCast<T> TypeCast;
-
-public:
-    TypedMapIterator(const Container& container)
-        : m_current(container.begin()), m_end(container.end()) {
-    }
-
-    TypedMapIterator(Iterator begin, Iterator end)
-        : m_current(begin), m_end(end) {
-    }
-
-    virtual ~TypedMapIterator() {
-    }
-
-    virtual const char* name() const {
-        return m_current->first.c_str();
-    }
-
-    virtual Value value() const {
-        return TypeCast::toValue(m_current->second);
-    }
-
-    virtual bool next() {
-        return (++m_current != m_end);
-    }
-
-private:
-    Iterator m_current;
-    Iterator m_end;
-};
+#include "Iterator.h"
 
 //----------------------------------------------------------------------------------------------
 // TypedMap<>
@@ -89,7 +52,7 @@ public:
     }
 
     virtual Iterator* names() const {
-        return new TypedMapIterator<T>(*m_container);
+        return newIterator(*m_container);
     }
 
     virtual Value value(const std::string& name) const {

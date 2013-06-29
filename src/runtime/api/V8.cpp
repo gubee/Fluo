@@ -9,22 +9,25 @@
 
 #include "kernel/CoreObject.h"
 #include "kernel/ClassRegistry.h"
-#include "kernel/Map.h"
+#include "kernel/StackFrame.h"
+#include "kernel/Iterator.h"
 #include "runtime/Runtime.h"
 #include "V8.h"
 
 //----------------------------------------------------------------------------------------------
 // StackFrame APIs
 void StackFrame_top(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(internals::StackFrame_top())));
 }
 
 void StackFrame_push(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(internals::StackFrame_push())));
 }
 
 void StackFrame_pop(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    internals::StackFrame_pop();
 }
 
 //----------------------------------------------------------------------------------------------
@@ -219,11 +222,15 @@ void Class_enum(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
 //----------------------------------------------------------------------------------------------
 // Method APIs
 void Method_name(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaMethod* metaMethod = cast(MetaMethod, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::String::New(metaMethod->name));
 }
 
 void Method_type(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaMethod* metaMethod = cast(MetaMethod, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::Uint32::New(metaMethod->type));
 }
 
 void Method_call(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
@@ -233,11 +240,16 @@ void Method_call(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
 //----------------------------------------------------------------------------------------------
 // Enum APIs
 void Enum_name(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaEnum* metaEnum = cast(MetaEnum, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::String::New(metaEnum->name));
 }
 
 void Enum_values(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaEnum* metaEnum = cast(MetaEnum, arguments[0]->IntegerValue());
+    Iterator* iterator = newIterator(metaEnum->values);
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(iterator)));
 }
 
 //----------------------------------------------------------------------------------------------
@@ -275,7 +287,7 @@ void ClassRegistry_class(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
 }
 
 void ClassRegistry_classes(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    Iterator* iterator = new TypedMapIterator<const MetaClass*>(ClassRegistry::instance().registeredClasses());
+    Iterator* iterator = newIterator(ClassRegistry::instance().registeredClasses());
     arguments.GetReturnValue().Set(v8::Number::New(asHandle(iterator)));
 }
 
