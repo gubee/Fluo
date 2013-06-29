@@ -50,7 +50,7 @@ int main() {
 	v8::Handle<v8::Script> script = v8::Script::Compile(v8::String::New(ss));
 	script->Run();
 
-//	List* lb = new BoolList();
+	List* lb = new BoolList();
 //    List* li = new IntList();
 //    List* lr = new RealList();
 //    List* ls = new StringList();
