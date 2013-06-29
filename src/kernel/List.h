@@ -24,10 +24,13 @@ namespace internals {
     };
 }
 
+//----------------------------------------------------------------------------------------------
+// TypedList<>
 template <typename T>
 class TypedList : public List {
 public:
     typedef typename internals::ListContainerType<T>::result Container;
+    typedef TypeCast<T> TypeCast;
 
 public:
     TypedList()
@@ -48,15 +51,15 @@ public:
     }
 
     virtual void append(ValueReference value) {
-        m_container->push_back(fromValue<T>(value));
+        m_container->push_back(TypeCast::fromValue(value));
     }
 
     virtual void remove(ValueReference value, bool removeAll = true) {
-        T target = fromValue<T>(value);
+        T target = TypeCast::fromValue(value);
         if (removeAll) {
             m_container->erase(std::remove(m_container->begin(), m_container->end(), target), m_container->end());
         } else {
-            typename Container::const_iterator i = std::find(m_container->begin(), m_container->end(), target);
+            typename Container::iterator i = std::find(m_container->begin(), m_container->end(), target);
             if (i != m_container->end())
                 m_container->erase(i);
         }
@@ -73,17 +76,17 @@ public:
     }
 
     virtual int indexOf(ValueReference value) const {
-        T target = fromValue<T>(value);
-        typename Container::const_iterator i = std::find(m_container->begin(), m_container->end(), target);
+        T target = TypeCast::fromValue(value);
+        typename Container::iterator i = std::find(m_container->begin(), m_container->end(), target);
         return (i != m_container->end()) ? std::distance(m_container->begin(), i) : -1;
     }
 
     virtual Value at(int index) const {
-        return toValue<T>((*m_container)[index]);
+        return TypeCast::toValue((*m_container)[index]);
     }
 
     virtual void setAt(int index, ValueReference value) {
-        (*m_container)[index] = fromValue<T>(value);
+        (*m_container)[index] = TypeCast::fromValue(value);
     }
 
 private:

@@ -8,6 +8,8 @@
 #if defined(F_RUNTIME_V8)
 
 #include "kernel/CoreObject.h"
+#include "kernel/ClassRegistry.h"
+#include "kernel/Map.h"
 #include "runtime/Runtime.h"
 #include "V8.h"
 
@@ -26,9 +28,37 @@ void StackFrame_pop(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
 }
 
 //----------------------------------------------------------------------------------------------
+// Iterator APIs
+void Iterator_delete(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
+    Iterator* iterator = cast(Iterator, arguments[0]->IntegerValue());
+    delete iterator;
+}
+
+void Iterator_name(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
+    Iterator* iterator = cast(Iterator, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::String::New(iterator->name()));
+}
+
+void Iterator_value(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
+    Iterator* iterator = cast(Iterator, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(iterator->value());
+}
+
+void Iterator_next(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
+    Iterator* iterator = cast(Iterator, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::Boolean::New(iterator->next()));
+}
+
+//----------------------------------------------------------------------------------------------
 // List APIs
 void List_new(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    List* list = List::newInstance((Type)arguments[0]->Int32Value());
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(list)));
 }
 
 void List_delete(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
@@ -82,7 +112,9 @@ void List_setAt(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
 //----------------------------------------------------------------------------------------------
 // Map APIs
 void Map_new(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    Map* map = Map::newInstance((Type)arguments[0]->Int32Value());
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(map)));
 }
 
 void Map_delete(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
@@ -231,7 +263,21 @@ void Object_class(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
 
 //----------------------------------------------------------------------------------------------
 // ClassRegistry APIs
-// TODO:
+void ClassRegistry_register(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
+    ClassRegistry::instance().registerClass(metaClass);
+}
+
+void ClassRegistry_class(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    const v8::String::Utf8Value name(arguments[0]);
+    const MetaClass* metaClass = ClassRegistry::instance().findClass(*name);
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass)));
+}
+
+void ClassRegistry_classes(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    Iterator* iterator = new TypedMapIterator<const MetaClass*>(ClassRegistry::instance().registeredClasses());
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(iterator)));
+}
 
 //----------------------------------------------------------------------------------------------
 // Script APIs

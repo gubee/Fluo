@@ -43,13 +43,11 @@ enum Type {
     ObjectType
 };
 
-#define DEFINE_TYPE(type, code)      template <> struct TypeOf<type> { enum { value = code }; };
+#define DEFINE_TYPE(type, code)      template <> struct TypeOf<type> { static const Type value = code; };
 
 template <typename T>
 struct TypeOf {
-    enum {
-        value = UndefinedType
-    };
+    static const Type value = UndefinedType;
 };
 
 DEFINE_TYPE(bool, BoolType);
@@ -95,100 +93,77 @@ typedef JSC::Value ScriptValue;
 #endif
 
 template <typename T>
-inline T fromValue(ValueReference value) {
-    return T();
-}
+struct TypeCast {
+    inline static T fromValue(ValueReference value) {
+        return T();
+    }
 
-template <typename T, typename U>
-inline Value toValue(U value) {
-    return Value();
-}
+    template <typename U>
+    inline static Value toValue(U value) {
+        return Value();
+    }
+};
 
 #if defined(F_RUNTIME_EMSCRIPTEN)
 #elif defined(F_RUNTIME_FLASCC)
 #elif defined(F_RUNTIME_V8)
 
 template <>
-inline bool fromValue<bool>(ValueReference value) {
-    return value->BooleanValue();
-}
+struct TypeCast<bool> {
+    inline static bool fromValue(ValueReference value) {
+        return value->BooleanValue();
+    }
+
+    inline static Value toValue(bool value) {
+        return v8::Boolean::New(value);
+    }
+};
 
 template <>
-inline Value toValue<bool>(bool value) {
-    return v8::Boolean::New(value);
-}
+struct TypeCast<int> {
+    inline static int fromValue(ValueReference value) {
+        return value->Int32Value();
+    }
+
+    inline static Value toValue(int value) {
+        return v8::Integer::New(value);
+    }
+};
 
 template <>
-inline int fromValue<int>(ValueReference value) {
-    return value->Int32Value();
-}
+struct TypeCast<float> {
+    inline static float fromValue(ValueReference value) {
+        return value->NumberValue();
+    }
+
+    inline static Value toValue(float value) {
+        return v8::Number::New(value);
+    }
+};
 
 template <>
-inline Value toValue<int>(int value) {
-    return v8::Integer::New(value);
-}
+struct TypeCast<std::string> {
+    inline static std::string fromValue(ValueReference value) {
+        const v8::String::Utf8Value utf8(value);
+        return *utf8;
+    }
 
-template <>
-inline float fromValue<float>(ValueReference value) {
-    return value->NumberValue();
-}
+    inline static Value toValue(const std::string& value) {
+        return v8::String::New(value.c_str());
+    }
+};
 
-template <>
-inline Value toValue<float>(float value) {
-    return v8::Number::New(value);
-}
+template <typename T>
+struct TypeCast<T*> {
+    inline static T* fromValue(ValueReference value) {
+        return cast(T, value->IntegerValue());
+    }
 
-template <>
-inline std::string fromValue<std::string>(ValueReference value) {
-    const v8::String::Utf8Value utf8(value);
-    return *utf8;
-}
-
-template <>
-inline Value toValue<std::string>(const std::string& value) {
-    return v8::String::New(value.c_str());
-}
-
-template <>
-inline List* fromValue<List*>(ValueReference value) {
-    return 0;
-}
-
-template <>
-inline Value toValue<List*>(List* value) {
-    return v8::Number::New(asHandle(value));
-}
-
-template <>
-inline Map* fromValue<Map*>(ValueReference value) {
-    return 0;
-}
-
-template <>
-inline Value toValue<Map*>(Map* value) {
-    return v8::Number::New(asHandle(value));
-}
-
-// TODO:
-//template <>
-//inline Script* fromValue<Script*>(ValueReference value) {
-//    return 0;
-//}
-
-//template <>
-//inline Value toValue<Script*>(Script* value) {
-//    return v8::Number::New(asHandle(value));
-//}
-
-template <>
-inline Object* fromValue<Object*>(ValueReference value) {
-    return cast(Object, value->IntegerValue());
-}
-
-template <>
-inline Value toValue<Object*>(Object* value) {
-    return v8::Number::New(asHandle(value));
-}
+    template <typename U>
+    inline static Value toValue(U* value) {
+        return v8::Number::New(asHandle(value));
+    }
+};
 
 inline Value undefined() {
     return v8::Undefined();
@@ -255,6 +230,21 @@ __attribute__((aligned(4), packed))
 ;
 
 //----------------------------------------------------------------------------------------------
+// Iterator
+class Iterator {
+public:
+    Iterator() {
+    }
+
+    virtual ~Iterator() {
+    }
+
+    virtual const char* name() const = 0;
+    virtual Value value() const = 0;
+    virtual bool next() = 0;
+};
+
+//----------------------------------------------------------------------------------------------
 // List
 class List {
 public:
@@ -276,6 +266,9 @@ public:
     virtual int indexOf(ValueReference value) const = 0;
     virtual Value at(int index) const = 0;
     virtual void setAt(int index, ValueReference value) = 0;
+
+public:
+    static List* newInstance(Type type);
 
 protected:
     Type m_type;
@@ -299,8 +292,11 @@ public:
     virtual void insert(const std::string& name, ValueReference value) = 0;
     virtual void remove(const std::string& name) = 0;
     virtual int count() const = 0;
-    virtual const List* names() const = 0;
+    virtual Iterator* names() const = 0;
     virtual Value value(const std::string& name) const = 0;
+
+public:
+    static Map* newInstance(Type type);
 
 protected:
     Type m_type;

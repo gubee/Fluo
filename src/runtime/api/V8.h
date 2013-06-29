@@ -28,6 +28,20 @@ void StackFrame_push(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 void StackFrame_pop(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 
 //----------------------------------------------------------------------------------------------
+// Iterator APIs
+/*
+    [PROTOTYPES]
+    void Iterator_delete(Iterator* iterator);
+    const char* Iterator_name(Iterator* iterator);
+    Value Iterator_value(Iterator* iterator);
+    bool Iterator_next(Iterator* iterator);
+ */
+void Iterator_delete(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Iterator_name(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Iterator_value(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Iterator_next(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+
+//----------------------------------------------------------------------------------------------
 // List APIs
 /*
     [PROTOTYPES]
@@ -129,7 +143,15 @@ void Object_class(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 
 //----------------------------------------------------------------------------------------------
 // ClassRegistry APIs
-// TODO:
+/*
+    [PROTOTYPES]
+    void ClassRegistry_register(const MetaClass* metaClass);
+    const MetaClass* ClassRegistry_class(const char* name);
+    const List* ClassRegistry_classes();
+ */
+void ClassRegistry_register(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void ClassRegistry_class(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void ClassRegistry_classes(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 
 //----------------------------------------------------------------------------------------------
 // Script APIs

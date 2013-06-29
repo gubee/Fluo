@@ -12,10 +12,51 @@
 #include <map>
 #include "CoreType.h"
 
+//----------------------------------------------------------------------------------------------
+// TypeMapIterator<>
+template <typename T>
+class TypedMapIterator : public Iterator {
+public:
+    typedef std::map<std::string, T> Container;
+    typedef typename Container::const_iterator Iterator;
+    typedef TypeCast<T> TypeCast;
+
+public:
+    TypedMapIterator(const Container& container)
+        : m_current(container.begin()), m_end(container.end()) {
+    }
+
+    TypedMapIterator(Iterator begin, Iterator end)
+        : m_current(begin), m_end(end) {
+    }
+
+    virtual ~TypedMapIterator() {
+    }
+
+    virtual const char* name() const {
+        return m_current->first.c_str();
+    }
+
+    virtual Value value() const {
+        return TypeCast::toValue(m_current->second);
+    }
+
+    virtual bool next() {
+        return (++m_current != m_end);
+    }
+
+private:
+    Iterator m_current;
+    Iterator m_end;
+};
+
+//----------------------------------------------------------------------------------------------
+// TypedMap<>
 template <typename T>
 class TypedMap : public Map {
 public:
     typedef std::map<std::string, T> Container;
+    typedef TypeCast<T> TypeCast;
 
 public:
     TypedMap()
@@ -36,7 +77,7 @@ public:
     }
 
     virtual void insert(const std::string& name, ValueReference value) {
-        m_container->insert(std::make_pair(name, fromValue<T>(value)));
+        m_container->insert(std::make_pair(name, TypeCast::fromValue(value)));
     }
 
     virtual void remove(const std::string& name) {
@@ -47,15 +88,14 @@ public:
         return m_container->size();
     }
 
-    virtual const List* names() const {
-        // TODO:
-        return 0;
+    virtual Iterator* names() const {
+        return new TypedMapIterator<T>(*m_container);
     }
 
     virtual Value value(const std::string& name) const {
         typename Container::const_iterator i = m_container->find(name);
         if (i != m_container->end())
-            return toValue<T>(i->second);
+            return TypeCast::toValue(i->second);
         else
             return undefined();
     }
@@ -69,7 +109,7 @@ typedef TypedMap<bool> BoolMap;
 typedef TypedMap<int> IntMap;
 typedef TypedMap<float> RealMap;
 typedef TypedMap<std::string> StringMap;
-typedef TypedMap<Map*> MapMap;
+typedef TypedMap<List*> ListMap;
 typedef TypedMap<Map*> MapMap;
 // TODO:
 //typedef TypedMap<Script*> ScriptMap;

@@ -19,6 +19,10 @@
 
 using namespace std;
 
+struct AA {
+    static const int M = 0;
+};
+
 int main() {
     Object* o = new Object();
 	std::string s = "Hello";
@@ -45,6 +49,23 @@ int main() {
     v8::HandleScope handleScope(v8::Isolate::GetCurrent());
 	v8::Handle<v8::Script> script = v8::Script::Compile(v8::String::New(ss));
 	script->Run();
+
+	List* lb = new BoolList();
+    List* li = new IntList();
+    List* lr = new RealList();
+    List* ls = new StringList();
+    List* ll = new ListList();
+    List* lm = new MapList();
+    List* lo = new ObjectList();
+
+    Map* mb = new BoolMap();
+    Map* mi = new IntMap();
+    Map* mr = new RealMap();
+    Map* ms = new StringMap();
+    Map* ml = new ListMap();
+    Map* mm = new MapMap();
+    Map* mo = new ObjectMap();
+
 
 	return 0;
 }
