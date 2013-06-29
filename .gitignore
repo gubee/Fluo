@@ -2,4 +2,4 @@
 *.o
 Debug/*
 Debug.*
-*.DS_Store
+.DS_Store

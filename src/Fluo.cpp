@@ -13,12 +13,11 @@
 #include "kernel/CoreType.h"    // TODO: del
 #include "kernel/StackFrame.h"    // TODO: del
 #include "kernel/List.h"    // TODO: del
+#include "kernel/Map.h"    // TODO: del
 #include "items/Object.h"   // TODO: del
 #include "Engine.h"
 
 using namespace std;
-
-
 
 int main() {
     Object* o = new Object();

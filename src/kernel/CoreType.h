@@ -190,6 +190,10 @@ inline Value toValue<Object*>(Object* value) {
     return v8::Number::New(asHandle(value));
 }
 
+inline Value undefined() {
+    return v8::Undefined();
+}
+
 #elif defined(F_RUNTIME_SPIDERMONKEY)
 #elif defined(F_RUNTIME_JAVASCRIPTCORE)
 #endif

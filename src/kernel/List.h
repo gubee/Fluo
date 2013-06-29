@@ -38,7 +38,7 @@ public:
 
     explicit TypedList(Container* container)
         : List(TypeOf<T>::value)
-        , m_container(new Container())
+        , m_container(container)
         , m_needsToDeleteContainer(false) {
     }
 
