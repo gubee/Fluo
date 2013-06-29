@@ -24,4 +24,11 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/kernel/Util.h</name>
+			<type>1</type>
+			<location>/Users/impaulkim/Documents/git/Fluo/src/kernel/Util.h</location>
+		</link>
+	</linkedResources>
 </projectDescription>
