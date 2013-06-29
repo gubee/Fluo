@@ -8,17 +8,7 @@
 #ifndef MATRIX4X4_H_
 #define MATRIX4X4_H_
 
-class Matrix4x4 {
-public:
-    QMatrix4x4::QMatrix4x4(const float* values)
-    {
-        for (int row = 0; row < 4; ++row)
-            for (int col = 0; col < 4; ++col)
-                m[col][row] = values[row * 4 + col];
-        flagBits = General;
-    }
-
-private:
+struct Matrix4x4 {
     float m[4][4];
 };
 

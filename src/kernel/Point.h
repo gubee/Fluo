@@ -92,7 +92,7 @@ struct Point {
     }
 
     float manhattanLength() const {
-        return abs(x) + abs(y);
+        return std::abs(x) + std::abs(y);
     }
 
     bool compare(const Point& other) const {

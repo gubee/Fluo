@@ -21,7 +21,6 @@ Rect& Rect::adjust(float x1, float y1, float x2, float y2) {
     return *this;
 }
 
-
 bool Rect::intersects(const Rect& other) const
 {
     float left1 = x;
@@ -141,7 +140,7 @@ Rect& Rect::normalize() {
     return *this;
 }
 
-bool Rect::contains(const Point& point, bool proper = false) {
+bool Rect::contains(const Point& point, bool proper/*= false*/) {
     float left = x, right = x;
     if (width < 0)
         left += width;
@@ -167,7 +166,7 @@ bool Rect::contains(const Point& point, bool proper = false) {
         return !(point.y < top || point.y > bottom);
 }
 
-bool Rect::contains(const Rect& rect, bool proper = false) {
+bool Rect::contains(const Rect& rect, bool proper/*= false*/) {
     if (width == 0 || height == 0 || rect.empty())
         return false;
 

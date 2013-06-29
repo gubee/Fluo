@@ -22,12 +22,12 @@ struct Rect {
     {
     }
 
-    Rect(const float& x, const float& y, const float& width, const float& height)
+    Rect(float x, float y, float width, float height)
         : x(x), y(y), width(width), height(height)
     {
     }
 
-    inline Rect clone() const;
+    Rect clone() const;
     inline bool empty() const;
 
     inline float left() const;
@@ -35,7 +35,7 @@ struct Rect {
     inline float top() const;
     inline float bottom() const;
 
-    inline Rect& adjust(float x1, float y1, float x2, float y2);
+    Rect& adjust(float x1, float y1, float x2, float y2);
     inline Rect adjusted(float x1, float y1, float x2, float y2) const;
 
     bool intersects(const Rect& other) const;
@@ -59,6 +59,7 @@ struct Rect {
 
     friend inline bool operator==(const Rect&, const Rect&);
     friend inline bool operator!=(const Rect&, const Rect&);
+
 };
 
 inline Rect Rect::clone() const {
@@ -112,13 +113,13 @@ inline Rect& Rect::moveCenter(const Point& point) {
 }
 
 inline Rect& Rect::operator|=(const Rect &r)
-{
+    {
     *this = *this | r;
     return *this;
 }
 
 inline Rect& Rect::operator&=(const Rect &r)
-{
+    {
     *this = *this & r;
     return *this;
 }
