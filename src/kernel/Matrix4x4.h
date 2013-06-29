@@ -11,9 +11,6 @@
 struct Matrix4x4 {
     float m[4][4];
 
-    Matrix4X4()
-    {
-    }
 };
 
 #endif /* MATRIX4X4_H_ */
