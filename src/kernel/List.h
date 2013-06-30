@@ -11,6 +11,7 @@
 #include <vector>
 #include <deque>
 #include "CoreType.h"
+#include "TypeTraits.h"
 
 namespace internals {
     template <typename U>
@@ -34,13 +35,13 @@ public:
 
 public:
     TypedList()
-        : List(TypeOf<T>::value)
+        : List(to_type<T>::value)
         , m_container(new Container())
         , m_needsToDeleteContainer(true) {
     }
 
     explicit TypedList(Container* container)
-        : List(TypeOf<T>::value)
+        : List(to_type<T>::value)
         , m_container(container)
         , m_needsToDeleteContainer(false) {
     }

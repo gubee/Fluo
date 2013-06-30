@@ -25,6 +25,8 @@ namespace internals {
     StackFrame* StackFrame_push();
     void StackFrame_pop();
 
+    Argument* StackFrame_at(int index);
+
     void StackFrame_get(int index, bool& value);
     void StackFrame_get(int index, int& value);
     void StackFrame_get(int index, float& value);

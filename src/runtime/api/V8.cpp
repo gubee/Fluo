@@ -173,11 +173,18 @@ void Class_new(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     metaClass->name = className;
     metaClass->base = baseClass;
     metaClass->create = &DynamicObject::create;
-    metaClass->methodOffset = methodOffsetOf(*metaClass);
     arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass)));
 }
 
 void Class_defineMethod(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    // TODO:
+}
+
+void Class_defineProperty(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    // TODO:
+}
+
+void Class_defineSignal(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     // TODO:
 }
 
@@ -193,19 +200,6 @@ void Class_base(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->base)));
 }
 
-void Class_methodCount(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    v8::HandleScope handleScope;
-    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-    arguments.GetReturnValue().Set(v8::Uint32::New(metaClass->methods.size()));
-}
-
-void Class_method(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    v8::HandleScope handleScope;
-    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-    std::size_t index = arguments[1]->Uint32Value();
-    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->methods[index])));
-}
-
 void Class_enumCount(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     v8::HandleScope handleScope;
     const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
@@ -219,22 +213,43 @@ void Class_enum(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->enums[index])));
 }
 
-//----------------------------------------------------------------------------------------------
-// Method APIs
-void Method_name(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+void Class_methodCount(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     v8::HandleScope handleScope;
-    const MetaMethod* metaMethod = cast(MetaMethod, arguments[0]->IntegerValue());
-    arguments.GetReturnValue().Set(v8::String::New(metaMethod->name));
+    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::Uint32::New(metaClass->methods.size()));
 }
 
-void Method_type(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+void Class_method(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     v8::HandleScope handleScope;
-    const MetaMethod* metaMethod = cast(MetaMethod, arguments[0]->IntegerValue());
-    arguments.GetReturnValue().Set(v8::Uint32::New(metaMethod->type));
+    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
+    std::size_t index = arguments[1]->Uint32Value();
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->methods[index])));
 }
 
-void Method_call(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+void Class_propertyCount(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
+    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::Int32::New(metaClass->properties.size()));
+}
+
+void Class_property(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
+    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
+    std::size_t index = arguments[1]->Uint32Value();
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->properties[index])));
+}
+
+void Class_signalCount(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
+    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::Int32::New(metaClass->signals.size()));
+}
+
+void Class_signal(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
+    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
+    std::size_t index = arguments[1]->Uint32Value();
+    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->signals[index])));
 }
 
 //----------------------------------------------------------------------------------------------
@@ -250,6 +265,58 @@ void Enum_values(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     const MetaEnum* metaEnum = cast(MetaEnum, arguments[0]->IntegerValue());
     Iterator* iterator = newIterator(metaEnum->values);
     arguments.GetReturnValue().Set(v8::Number::New(asHandle(iterator)));
+}
+
+//----------------------------------------------------------------------------------------------
+// Method APIs
+void Method_name(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
+    const MetaMethod* metaMethod = cast(MetaMethod, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::String::New(metaMethod->name));
+}
+
+void Method_call(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    // TODO:
+}
+
+//----------------------------------------------------------------------------------------------
+// Property APIs
+void Property_name(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    // TODO:
+}
+
+void Property_type(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    // TODO:
+}
+
+void Property_isReadOnly(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    // TODO:
+}
+
+void Property_read(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    // TODO:
+}
+
+void Property_write(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    // TODO:
+}
+
+//----------------------------------------------------------------------------------------------
+// Signal APIs
+void Signal_name(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    // TODO:
+}
+
+void Signal_connect(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    // TODO:
+}
+
+void Signal_disconnect(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    // TODO:
+}
+
+void Signal_emit(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    // TODO:
 }
 
 //----------------------------------------------------------------------------------------------
@@ -331,6 +398,10 @@ void Runtime::shutdown() {
     m_data->context->Exit();
     delete m_data;
     m_data = 0;
+}
+
+void Runtime::runScript(const char* script) {
+    // TODO:
 }
 
 #endif  // F_RUNTIME_V8

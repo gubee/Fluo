@@ -23,6 +23,7 @@
 //----------------------------------------------------------------------------------------------
 // Forward Declarations
 class Object;
+class Signal;
 class List;
 class Map;
 
@@ -42,24 +43,6 @@ enum Type {
     ScriptType,
     ObjectType
 };
-
-#define DEFINE_TYPE(type, code)      template <> struct TypeOf<type> { static const Type value = code; };
-
-template <typename T>
-struct TypeOf {
-    static const Type value = UndefinedType;
-};
-
-DEFINE_TYPE(bool, BoolType);
-DEFINE_TYPE(int, IntType);
-DEFINE_TYPE(float, RealType);
-DEFINE_TYPE(const char*, StringType);
-DEFINE_TYPE(std::string, StringType);
-DEFINE_TYPE(List*, ListType);
-DEFINE_TYPE(Map*, MapType);
-// TODO:
-//DEFINE_TYPE(Script*, ScriptType);
-DEFINE_TYPE(Object*, ObjectType);
 
 //----------------------------------------------------------------------------------------------
 // Address / Handle
@@ -178,14 +161,6 @@ inline Value undefined() {
 enum ClassType {
     NativeClass,
     DynamicClass
-};
-
-//----------------------------------------------------------------------------------------------
-// MethodType
-enum MethodType {
-    ReadProperty,
-    WriteProperty,
-    Method
 };
 
 //----------------------------------------------------------------------------------------------
@@ -314,6 +289,17 @@ struct Invoker {
 };
 
 //----------------------------------------------------------------------------------------------
+// SignalIndexer
+struct SignalIndexer {
+    SignalIndexer() {
+    }
+    virtual ~SignalIndexer() {
+    }
+
+    virtual Signal& operator()(Object* object) const = 0;
+};
+
+//----------------------------------------------------------------------------------------------
 // MetaEnum
 struct MetaEnum {
     const char* name;
@@ -323,9 +309,24 @@ struct MetaEnum {
 //----------------------------------------------------------------------------------------------
 // MetaMethod
 struct MetaMethod {
-    MethodType type;
     const char* name;
     Invoker* function;
+};
+
+//----------------------------------------------------------------------------------------------
+// MetaProperty
+struct MetaProperty {
+    const char* name;
+    Type type;
+    Invoker* getter;
+    Invoker* setter;
+};
+
+//----------------------------------------------------------------------------------------------
+// MetaSignal
+struct MetaSignal {
+    const char* name;
+    SignalIndexer* indexer;
 };
 
 //----------------------------------------------------------------------------------------------
@@ -335,9 +336,10 @@ struct MetaClass {
     const char* name;
     const MetaClass* base;
     Object* (*create)(const MetaClass*);
-    int methodOffset;
-    std::vector<MetaMethod*> methods;
     std::vector<MetaEnum*> enums;
+    std::vector<MetaMethod*> methods;
+    std::vector<MetaProperty*> properties;
+    std::vector<MetaSignal*> signals;
 };
 
 struct none {

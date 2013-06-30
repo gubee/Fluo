@@ -15,7 +15,7 @@
 // class Object
 class Object {
     BEGIN_CLASS(Object, none)
-        PROPERTY(std::string, "objectName", objectName, setObjectName)
+        PROPERTY("objectName", objectName, setObjectName, std::string)
     END_CLASS()
 
 public:
@@ -24,6 +24,10 @@ public:
 
     std::string objectName() const;
     void setObjectName(const std::string& value);
+
+    const MetaSignal* signal(const char* name) const;
+    const MetaProperty* property(const char* name) const;
+    const MetaMethod* method(const char* name) const;
 
 protected:
     void none();
@@ -47,5 +51,13 @@ public:
 private:
     const MetaClass* m_metaClass;
 };
+
+//----------------------------------------------------------------------------------------------
+// Signal/Slot Connection
+#define CONNECT(sender, signal, receiver, slot)                     \
+    sender->signal.connect(receiver, receiver->method(#slot))
+
+#define DISCONNECT(sender, signal, receiver, slot)                  \
+    sender->signal.disconnect(receiver, receiver->method(#slot))
 
 #endif /* CORE_OBJECT_H_ */

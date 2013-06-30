@@ -14,6 +14,8 @@
 #include "kernel/StackFrame.h"    // TODO: del
 #include "kernel/List.h"    // TODO: del
 #include "kernel/Map.h"    // TODO: del
+#include "kernel/Signal.h"  // TODO: del
+#include "kernel/Point.h"  // TODO: del
 #include "items/Object.h"   // TODO: del
 #include "Engine.h"
 
@@ -23,23 +25,61 @@ struct AA {
     static const int M = 0;
 };
 
+class Test : public Object {
+    BEGIN_CLASS(Test, Object)
+        SIGNAL("testSignal", testSignal)
+        METHOD("test", test)
+    END_CLASS()
+
+public:
+    Signal testSignal;
+
+    void test() {
+        cout << "test called" << endl;
+    }
+};
+
+//SignalPrototype
+//Signals
+
+
+//struct A {};
+//template <typename T>
+//struct A {};
+
+//to_type<>
+//from_argument<>
+//to_argument<>
+
+
 int main() {
     Object* o = new Object();
 	std::string s = "Hello";
 
 	internals::Stack_open();
-	internals::StackFrame_push();
-    internals::StackFrame_set(o);
-	internals::StackFrame_set(s.c_str(), s.size());
-    //internals::StackFrame_set(s.c_str(), (std::size_t)-1, false);
 
-	const MetaClass* metaClass = o->metaClass();
-	MetaMethod* metaMethod = metaClass->methods[1];
-	metaMethod->function->invoke();
+    Test* t1 = new Test();
+    Test* t2 = new Test();
+    Test* t3 = new Test();
+    CONNECT(t1, testSignal, t2, test);
+    CONNECT(t1, testSignal, t3, test);
 
-	cout << ": " << o->objectName() << endl;
+    Point p;
 
-	internals::StackFrame_pop();
+    t1->testSignal.emit(p);
+
+//	internals::StackFrame_push();
+//    internals::StackFrame_set(o);
+//	internals::StackFrame_set(s.c_str(), s.size());
+//    //internals::StackFrame_set(s.c_str(), (std::size_t)-1, false);
+//
+//	const MetaClass* metaClass = o->metaClass();
+//	MetaMethod* metaMethod = metaClass->methods[1];
+//	metaMethod->function->invoke();
+//
+//	cout << ": " << o->objectName() << endl;
+//
+//	internals::StackFrame_pop();
 
     Engine engine;
     engine.startup();

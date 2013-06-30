@@ -72,6 +72,10 @@ namespace internals {
         stackPointer = asAddress(topStackFrame);
     }
 
+    Argument* StackFrame_at(int index) {
+        return at(index);
+    }
+
     void StackFrame_get(int index, bool& value) {
         Argument* argument = at(index);
         value = argument->boolean;

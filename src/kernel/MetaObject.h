@@ -9,50 +9,57 @@
 #define METAOBJECT_H_
 
 #include "CoreType.h"
+#include "TypeTraits.h"
 #include "Invoker.h"
+#include "Signal.h"
 
 //----------------------------------------------------------------------------------------------
 // Utilities
-int methodOffsetOf(const MetaClass& metaClass);
-void addMetaMethod(MetaClass& metaClass, const char* name, MethodType type, Invoker* invoker);
+namespace internals {
+    void Method_define(MetaClass* metaClass, const char* name, Invoker* invoker);
+    void Property_define(MetaClass* metaClass, const char* name, Invoker* getter, Invoker* setter, Type type);
+    void Signal_define(MetaClass* metaClass, const char* name, SignalIndexer* indexer);
 
-template <typename ClassType>
-struct ObjectFactory {
-    static Object* create(const MetaClass*) {
-        return new ClassType();
-    }
-};
+    template <typename ClassType>
+    struct ObjectFactory {
+        static Object* create(const MetaClass*) {
+            return new ClassType();
+        }
+    };
+}
 
 //----------------------------------------------------------------------------------------------
 #define BEGIN_CLASS(classtype, basetype)                                            \
     public:                                                                         \
-        virtual const MetaClass* metaClass() const {                                      \
+        virtual const MetaClass* metaClass() const {                                \
             return classtype::staticMetaClass();                                    \
         }                                                                           \
-        static const MetaClass* staticMetaClass() {                                       \
+        static const MetaClass* staticMetaClass() {                                 \
             static MetaClass metaClass = classtype::createMetaClass();              \
             return &metaClass;                                                      \
         }                                                                           \
     private:                                                                        \
         static MetaClass createMetaClass() {                                        \
-            typedef classtype       ClassType;                                      \
+            using namespace internals;                                              \
+            typedef classtype ClassType;                                            \
             MetaClass metaClass;                                                    \
             metaClass.type = NativeClass;                                           \
             metaClass.name = #classtype;                                            \
             metaClass.base = basetype::staticMetaClass();                           \
-            metaClass.create = &ObjectFactory<ClassType>::create;                   \
-            metaClass.methodOffset = methodOffsetOf(metaClass);
+            metaClass.create = &ObjectFactory<ClassType>::create;
 
 #define END_CLASS()                                                                 \
             return metaClass;                                                       \
         }
 
-#define PROPERTY(type, name, getter, setter)                                        \
-    addMetaMethod(metaClass, name, ReadProperty, newInvoker(&ClassType::getter));   \
-    addMetaMethod(metaClass, name, WriteProperty, newInvoker(&ClassType::setter));
+#define METHOD(name, method)                                                        \
+    Method_define(&metaClass, name, newInvoker(&ClassType::method));
 
-#define METHOD(type, name, method)                                                  \
-    addMetaMethod(metaClass, name, Method, newInvoker(&ClassType::method));
+#define PROPERTY(name, getter, setter, type)                                        \
+    Property_define(&metaClass, name, newInvoker(&ClassType::getter), newInvoker(&ClassType::setter), to_type<type>::value);
+
+#define SIGNAL(name, signal)                                                        \
+    Signal_define(&metaClass, name, newSignalIndexer(&ClassType::signal));
 
 #define BEGIN_ENUM(enumName)                                                        \
     {                                                                               \

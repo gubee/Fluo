@@ -9,261 +9,230 @@
 #define INVOKER_H_
 
 #include "CoreType.h"
+#include "TypeTraits.h"
 #include "StackFrame.h"
 
-//----------------------------------------------------------------------------------------------
-// Utilities
-template <typename T>
-struct ArgumentType {
-    typedef T type;
-};
+#define F_DECLARE_GENERIC_INVOKER(returnType, argumentList)             \
+    typedef returnType (Class::*MemberPtr)(argumentList);               \
+    typedef returnType (Class::*ConstMemberPtr)(argumentList) const;    \
+                                                                        \
+    GenericInvoker(MemberPtr member)                                    \
+        : member(member) {                                              \
+    }                                                                   \
+                                                                        \
+    GenericInvoker(ConstMemberPtr member)                               \
+        : constMember(member) {                                         \
+    }                                                                   \
+                                                                        \
+    union {                                                             \
+        MemberPtr member;                                               \
+        ConstMemberPtr constMember;                                     \
+    };
 
-template <typename T>
-struct ArgumentType<const T> {
-    typedef T type;
-};
-
-template <typename T>
-struct ArgumentType<const T&> {
-    typedef T type;
-};
-
+namespace internals {
 //----------------------------------------------------------------------------------------------
 // GenericInvoker
-template <
-    typename Class, typename Return,
-    typename Argument0 = void, typename Argument1 = void,
-    typename Argument2 = void, typename Argument3 = void
->
-struct GenericInvoker : Invoker {
-    virtual void invoke() {
-    }
-};
+    template <typename Class, typename Return, F_TEMPLATE_FORMAL_LIST>
+    struct GenericInvoker : Invoker {
+        virtual void invoke() {
+        }
+    };
 
 //----------------------------------------------------------------------------------------------
-template <
-    typename Class, typename Return
->
-struct GenericInvoker<Class, Return, void, void, void, void> : Invoker {
-    typedef Return (Class::*MemberPtr)();
-    typedef Return (Class::*ConstMemberPtr)() const;
+    template <typename Class, typename Return>
+    struct GenericInvoker<Class, Return> : Invoker {
+        F_DECLARE_GENERIC_INVOKER(Return, F_TEMPLATE_ACTUAL_LIST_0)
 
-    GenericInvoker(MemberPtr member)
-        : member(member) {
-    }
-
-    GenericInvoker(ConstMemberPtr member)
-        : constMember(member) {
-    }
-
-    virtual void invoke() {
-        Object* object = 0;
-        internals::StackFrame_get(0, object);
-        Return result = (static_cast<Class*>(object)->*member)();
-        internals::StackFrame_set(result);
-    }
-
-    union {
-        MemberPtr member;
-        ConstMemberPtr constMember;
+        virtual void invoke() {
+            Object* object = 0;
+            StackFrame_get(0, object);
+            Return result = (static_cast<Class*>(object)->*member)();
+            StackFrame_set(result);
+        }
     };
-};
 
-template <
-    typename Class, typename Return,
-    typename Argument0
->
-struct GenericInvoker<Class, Return, Argument0, void, void, void> : Invoker {
-    virtual void invoke() {
-    }
-};
+    template <typename Class, typename Return, F_TEMPLATE_FORMAL_LIST_1>
+    struct GenericInvoker<Class, Return, F_TEMPLATE_ACTUAL_LIST_1> : Invoker {
+        F_DECLARE_GENERIC_INVOKER(Return, F_TEMPLATE_ACTUAL_LIST_1)
 
-template <
-    typename Class, typename Return,
-    typename Argument0, typename Argument1
->
-struct GenericInvoker<Class, Return, Argument0, Argument1, void, void> : Invoker {
-    virtual void invoke() {
-    }
-};
+        virtual void invoke() {
+            typedef typename from_argument<Argument0>::result Type0;
 
-template <
-    typename Class, typename Return,
-    typename Argument0, typename Argument1, typename Argument2
->
-struct GenericInvoker<Class, Return, Argument0, Argument1, Argument2, void> : Invoker {
-    virtual void invoke() {
-    }
-};
-
-template <
-    typename Class
->
-struct GenericInvoker<Class, void, void, void, void, void> : Invoker {
-    typedef void (Class::*MemberPtr)();
-    typedef void (Class::*ConstMemberPtr)() const;
-
-    GenericInvoker(MemberPtr member)
-        : member(member) {
-    }
-
-    GenericInvoker(ConstMemberPtr member)
-        : constMember(member) {
-    }
-
-    virtual void invoke() {
-        Object* object = 0;
-        internals::StackFrame_get(0, object);
-        (static_cast<Class*>(object)->*member)();
-    }
-
-    union {
-        MemberPtr member;
-        ConstMemberPtr constMember;
+            Object* object = 0;
+            Type0 value0 = Type0();
+            StackFrame_get(0, object);
+            StackFrame_get(1, value0);
+            Return result = (static_cast<Class*>(object)->*member)(value0);
+            StackFrame_set(result);
+        }
     };
-};
 
-template <
-    typename Class,
-    typename Argument0
->
-struct GenericInvoker<Class, void, Argument0, void, void, void> : Invoker {
-    typedef void (Class::*MemberPtr)(Argument0);
-    typedef void (Class::*ConstMemberPtr)(Argument0) const;
+    template <typename Class, typename Return, F_TEMPLATE_FORMAL_LIST_2>
+    struct GenericInvoker<Class, Return, F_TEMPLATE_ACTUAL_LIST_2> : Invoker {
+        F_DECLARE_GENERIC_INVOKER(Return, F_TEMPLATE_ACTUAL_LIST_2)
 
-    GenericInvoker(MemberPtr member)
-        : member(member) {
-    }
+        virtual void invoke() {
+            typedef typename from_argument<Argument0>::result Type0;
+            typedef typename from_argument<Argument1>::result Type1;
 
-    GenericInvoker(ConstMemberPtr member)
-        : constMember(member) {
-    }
-
-    virtual void invoke() {
-        typedef typename ArgumentType<Argument0>::type Type0;
-
-        Object* object = 0;
-        Type0 value0 = Type0();
-        internals::StackFrame_get(0, object);
-        internals::StackFrame_get(1, value0);
-        (static_cast<Class*>(object)->*member)(value0);
-    }
-
-    union {
-        MemberPtr member;
-        ConstMemberPtr constMember;
+            Object* object = 0;
+            Type0 value0 = Type0();
+            Type1 value1 = Type1();
+            StackFrame_get(0, object);
+            StackFrame_get(1, value0);
+            StackFrame_get(2, value1);
+            Return result = (static_cast<Class*>(object)->*member)(value0, value1);
+            StackFrame_set(result);
+        }
     };
-};
 
-template <
-    typename Class,
-    typename Argument0, typename Argument1
->
-struct GenericInvoker<Class, void, Argument0, Argument1, void, void> : Invoker {
-    virtual void invoke() {
-    }
-};
+    template <typename Class, typename Return, F_TEMPLATE_FORMAL_LIST_3>
+    struct GenericInvoker<Class, Return, F_TEMPLATE_ACTUAL_LIST_3> : Invoker {
+        F_DECLARE_GENERIC_INVOKER(Return, F_TEMPLATE_ACTUAL_LIST_3)
 
-template <
-    typename Class,
-    typename Argument0, typename Argument1, typename Argument2
->
-struct GenericInvoker<Class, void, Argument0, Argument1, Argument2, void> : Invoker {
-    virtual void invoke() {
-    }
-};
+        virtual void invoke() {
+            typedef typename from_argument<Argument0>::result Type0;
+            typedef typename from_argument<Argument1>::result Type1;
+            typedef typename from_argument<Argument2>::result Type2;
+
+            Object* object = 0;
+            Type0 value0 = Type0();
+            Type1 value1 = Type1();
+            Type2 value2 = Type2();
+            StackFrame_get(0, object);
+            StackFrame_get(1, value0);
+            StackFrame_get(2, value1);
+            StackFrame_get(3, value2);
+            Return result = (static_cast<Class*>(object)->*member)(value0, value1, value2);
+            StackFrame_set(result);
+        }
+    };
+
+    template <typename Class>
+    struct GenericInvoker<Class, void> : Invoker {
+        F_DECLARE_GENERIC_INVOKER(void, F_TEMPLATE_ACTUAL_LIST_0)
+
+        virtual void invoke() {
+            Object* object = 0;
+            StackFrame_get(0, object);
+            (static_cast<Class*>(object)->*member)();
+        }
+    };
+
+    template <typename Class, F_TEMPLATE_FORMAL_LIST_1>
+    struct GenericInvoker<Class, void, F_TEMPLATE_ACTUAL_LIST_1> : Invoker {
+        F_DECLARE_GENERIC_INVOKER(void, F_TEMPLATE_ACTUAL_LIST_1)
+
+        virtual void invoke() {
+            typedef typename from_argument<Argument0>::result Type0;
+
+            Object* object = 0;
+            Type0 value0 = Type0();
+            StackFrame_get(0, object);
+            StackFrame_get(1, value0);
+            (static_cast<Class*>(object)->*member)(value0);
+        }
+    };
+
+    template <typename Class, F_TEMPLATE_FORMAL_LIST_2>
+    struct GenericInvoker<Class, void, F_TEMPLATE_ACTUAL_LIST_2> : Invoker {
+        F_DECLARE_GENERIC_INVOKER(void, F_TEMPLATE_ACTUAL_LIST_2)
+
+        virtual void invoke() {
+            typedef typename from_argument<Argument0>::result Type0;
+            typedef typename from_argument<Argument1>::result Type1;
+
+            Object* object = 0;
+            Type0 value0 = Type0();
+            Type1 value1 = Type1();
+            StackFrame_get(0, object);
+            StackFrame_get(1, value0);
+            StackFrame_get(2, value1);
+            (static_cast<Class*>(object)->*member)(value0, value1);
+        }
+    };
+
+    template <typename Class, F_TEMPLATE_FORMAL_LIST_3>
+    struct GenericInvoker<Class, void, F_TEMPLATE_ACTUAL_LIST_3> : Invoker {
+        F_DECLARE_GENERIC_INVOKER(void, F_TEMPLATE_ACTUAL_LIST_3)
+
+        virtual void invoke() {
+            typedef typename from_argument<Argument0>::result Type0;
+            typedef typename from_argument<Argument1>::result Type1;
+            typedef typename from_argument<Argument2>::result Type2;
+
+            Object* object = 0;
+            Type0 value0 = Type0();
+            Type1 value1 = Type1();
+            Type2 value2 = Type2();
+            StackFrame_get(0, object);
+            StackFrame_get(1, value0);
+            StackFrame_get(2, value1);
+            StackFrame_get(3, value2);
+            (static_cast<Class*>(object)->*member)(value0, value1, value2);
+        }
+    };
 
 //----------------------------------------------------------------------------------------------
-template <
-    typename Class, typename Return
->
-Invoker* newInvoker(Return (Class::*method)()) {
-    typedef GenericInvoker<Class, Return> InvokerType;
-    return new InvokerType(method);
-}
+    template <typename Class, typename Return>
+    Invoker* newInvoker(Return (Class::*method)()) {
+        typedef GenericInvoker<Class, Return> InvokerType;
+        return new InvokerType(method);
+    }
 
-template <
-    typename Class, typename Return,
-    typename Argument0
->
-Invoker* newInvoker(Return (Class::*method)(Argument0)) {
-    typedef GenericInvoker<Class, Return, Argument0> InvokerType;
-    return new InvokerType(method);
-}
+    template <typename Class, typename Return, F_TEMPLATE_FORMAL_LIST_1>
+    Invoker* newInvoker(Return (Class::*method)(F_TEMPLATE_ACTUAL_LIST_1)) {
+        typedef GenericInvoker<Class, Return, F_TEMPLATE_ACTUAL_LIST_1> InvokerType;
+        return new InvokerType(method);
+    }
 
-template <
-    typename Class, typename Return,
-    typename Argument0, typename Argument1
->
-Invoker* newInvoker(Return (Class::*method)(Argument0, Argument1)) {
-    typedef GenericInvoker<Class, Return, Argument0, Argument1> InvokerType;
-    return new InvokerType(method);
-}
+    template <typename Class, typename Return, F_TEMPLATE_FORMAL_LIST_2>
+    Invoker* newInvoker(Return (Class::*method)(F_TEMPLATE_ACTUAL_LIST_2)) {
+        typedef GenericInvoker<Class, Return, F_TEMPLATE_ACTUAL_LIST_2> InvokerType;
+        return new InvokerType(method);
+    }
 
-template <
-    typename Class, typename Return,
-    typename Argument0, typename Argument1,
-    typename Argument2
->
-Invoker* newInvoker(Return (Class::*method)(Argument0, Argument1, Argument2)) {
-    typedef GenericInvoker<Class, Return, Argument0, Argument1, Argument2> InvokerType;
-    return new InvokerType(method);
-}
+    template <typename Class, typename Return, F_TEMPLATE_FORMAL_LIST_3>
+    Invoker* newInvoker(Return (Class::*method)(F_TEMPLATE_ACTUAL_LIST_3)) {
+        typedef GenericInvoker<Class, Return, F_TEMPLATE_ACTUAL_LIST_3> InvokerType;
+        return new InvokerType(method);
+    }
 
-template <
-    typename Class, typename Return,
-    typename Argument0, typename Argument1,
-    typename Argument2, typename Argument3
->
-Invoker* newInvoker(Return (Class::*method)(Argument0, Argument1, Argument2, Argument3)) {
-    typedef GenericInvoker<Class, Return, Argument0, Argument1, Argument2, Argument3> InvokerType;
-    return new InvokerType(method);
-}
+    template <typename Class, typename Return, F_TEMPLATE_FORMAL_LIST_4>
+    Invoker* newInvoker(Return (Class::*method)(F_TEMPLATE_ACTUAL_LIST_4)) {
+        typedef GenericInvoker<Class, Return, F_TEMPLATE_ACTUAL_LIST_4> InvokerType;
+        return new InvokerType(method);
+    }
 
-template <
-    typename Class, typename Return
->
-Invoker* newInvoker(Return (Class::*method)() const) {
-    typedef GenericInvoker<Class, Return> InvokerType;
-    return new InvokerType(method);
-}
+    template <typename Class, typename Return>
+    Invoker* newInvoker(Return (Class::*method)() const) {
+        typedef GenericInvoker<Class, Return> InvokerType;
+        return new InvokerType(method);
+    }
 
-template <
-    typename Class, typename Return,
-    typename Argument0
->
-Invoker* newInvoker(Return (Class::*method)(Argument0) const) {
-    typedef GenericInvoker<Class, Return, Argument0> InvokerType;
-    return new InvokerType(method);
-}
+    template <typename Class, typename Return, F_TEMPLATE_FORMAL_LIST_1>
+    Invoker* newInvoker(Return (Class::*method)(F_TEMPLATE_ACTUAL_LIST_1) const) {
+        typedef GenericInvoker<Class, Return, F_TEMPLATE_ACTUAL_LIST_1> InvokerType;
+        return new InvokerType(method);
+    }
 
-template <
-    typename Class, typename Return,
-    typename Argument0, typename Argument1
->
-Invoker* newInvoker(Return (Class::*method)(Argument0, Argument1) const) {
-    typedef GenericInvoker<Class, Return, Argument0, Argument1> InvokerType;
-    return new InvokerType(method);
-}
+    template <typename Class, typename Return, F_TEMPLATE_FORMAL_LIST_2>
+    Invoker* newInvoker(Return (Class::*method)(F_TEMPLATE_ACTUAL_LIST_2) const) {
+        typedef GenericInvoker<Class, Return, F_TEMPLATE_ACTUAL_LIST_2> InvokerType;
+        return new InvokerType(method);
+    }
 
-template <
-    typename Class, typename Return,
-    typename Argument0, typename Argument1,
-    typename Argument2
->
-Invoker* newInvoker(Return (Class::*method)(Argument0, Argument1, Argument2) const) {
-    typedef GenericInvoker<Class, Return, Argument0, Argument1, Argument2> InvokerType;
-    return new InvokerType(method);
-}
+    template <typename Class, typename Return, F_TEMPLATE_FORMAL_LIST_3>
+    Invoker* newInvoker(Return (Class::*method)(F_TEMPLATE_ACTUAL_LIST_3) const) {
+        typedef GenericInvoker<Class, Return, F_TEMPLATE_ACTUAL_LIST_3> InvokerType;
+        return new InvokerType(method);
+    }
 
-template <
-    typename Class, typename Return,
-    typename Argument0, typename Argument1,
-    typename Argument2, typename Argument3
->
-Invoker* newInvoker(Return (Class::*method)(Argument0, Argument1, Argument2, Argument3) const) {
-    typedef GenericInvoker<Class, Return, Argument0, Argument1, Argument2, Argument3> InvokerType;
-    return new InvokerType(method);
-}
+    template <typename Class, typename Return, F_TEMPLATE_FORMAL_LIST_4>
+    Invoker* newInvoker(Return (Class::*method)(F_TEMPLATE_ACTUAL_LIST_4) const) {
+        typedef GenericInvoker<Class, Return, F_TEMPLATE_ACTUAL_LIST_4> InvokerType;
+        return new InvokerType(method);
+    }
+}   // namespace internals
 
 #endif /* INVOKER_H_ */

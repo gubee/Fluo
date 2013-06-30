@@ -11,6 +11,7 @@
 #include <string>
 #include <map>
 #include "CoreType.h"
+#include "TypeTraits.h"
 #include "Iterator.h"
 
 //----------------------------------------------------------------------------------------------
@@ -23,13 +24,13 @@ public:
 
 public:
     TypedMap()
-        : Map(TypeOf<T>::value)
+        : Map(to_type<T>::value)
         , m_container(new Container())
         , m_needsToDeleteContainer(true) {
     }
 
     explicit TypedMap(Container* container)
-        : Map(TypeOf<T>::value)
+        : Map(to_type<T>::value)
         , m_container(container)
         , m_needsToDeleteContainer(false) {
     }

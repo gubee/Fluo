@@ -90,34 +90,34 @@ void Map_value(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 /*
     [PROTOTYPES]
     MetaClass* Class_new(const char* name, const MetaClass* base);
-    MetaMethod* Class_defineMethod(MetaClass* metaClass, const char* name, MethodType: type, Script* function);
+    MetaMethod* Class_defineMethod(MetaClass* metaClass, const char* name, Script* function);
+    MetaMethod* Class_defineProperty(MetaClass* metaClass, const char* name, Script* getter, Script* setter, Type type);
+    MetaMethod* Class_defineSignal(MetaClass* metaClass, const char* name);
     const char* Class_name(const MetaClass* metaClass);
     const MetaClass* Class_base(const MetaClass* metaClass);
-    int Class_methodCount(const MetaClass* metaClass);
-    MetaMethod* Class_method(const MetaClass* metaClass, int index);
     int Class_enumCount(const MetaClass* metaClass);
-    MetaEnum* Class_enum(const MetaClass* metaClass, int index);
+    const MetaEnum* Class_enum(const MetaClass* metaClass, int index);
+    int Class_methodCount(const MetaClass* metaClass);
+    const MetaMethod* Class_method(const MetaClass* metaClass, int index);
+    int Class_propertyCount(const MetaClass* metaClass);
+    const MetaProperty* Class_property(const MetaClass* metaClass, int index);
+    int Class_signalCount(const MetaClass* metaClass);
+    const MetaSignal* Class_signal(const MetaClass* metaClass, int index);
  */
 void Class_new(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 void Class_defineMethod(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Class_defineProperty(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Class_defineSignal(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 void Class_name(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 void Class_base(const v8::FunctionCallbackInfo<v8::Value>& arguments);
-void Class_methodCount(const v8::FunctionCallbackInfo<v8::Value>& arguments);
-void Class_method(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 void Class_enumCount(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 void Class_enum(const v8::FunctionCallbackInfo<v8::Value>& arguments);
-
-//----------------------------------------------------------------------------------------------
-// Method APIs
-/*
-    [PROTOTYPES]
-    const char* Method_name(const MetaMethod* metaMethod);
-    MethodType Method_type(const MetaMethod* metaMethod);
-    void Method_call(const MetaMethod* metaMethod);
- */
-void Method_name(const v8::FunctionCallbackInfo<v8::Value>& arguments);
-void Method_type(const v8::FunctionCallbackInfo<v8::Value>& arguments);
-void Method_call(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Class_methodCount(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Class_method(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Class_propertyCount(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Class_property(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Class_signalCount(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Class_signal(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 
 //----------------------------------------------------------------------------------------------
 // Enum APIs
@@ -128,6 +128,46 @@ void Method_call(const v8::FunctionCallbackInfo<v8::Value>& arguments);
  */
 void Enum_name(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 void Enum_values(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+
+//----------------------------------------------------------------------------------------------
+// Method APIs
+/*
+    [PROTOTYPES]
+    const char* Method_name(const MetaMethod* metaMethod);
+    void Method_call(const MetaMethod* metaMethod);
+ */
+void Method_name(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Method_call(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+
+//----------------------------------------------------------------------------------------------
+// Property APIs
+/*
+    [PROTOTYPES]
+    const char* Property_name(const MetaProperty* metaProperty);
+    Type Property_type(const MetaProperty* metaProperty);
+    bool Property_isReadOnly(const MetaProperty* metaProperty);
+    void Property_read(const MetaProperty* metaProperty);
+    void Property_write(const MetaProperty* metaProperty);
+ */
+void Property_name(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Property_type(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Property_isReadOnly(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Property_read(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Property_write(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+
+//----------------------------------------------------------------------------------------------
+// Signal APIs
+/*
+    [PROTOTYPES]
+    const char* Signal_name(const MetaSignal* metaSignal);
+    void Signal_connect(const MetaSignal* metaSignal, Object* sender, Object* receiver, const MetaMethod* metaMethod);
+    void Signal_disconnect(const MetaSignal* metaSignal, Object* sender, Object* receiver, const MetaMethod* metaMethod);
+    void Signal_emit(const MetaSignal* metaSignal, Object* sender);
+ */
+void Signal_name(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Signal_connect(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Signal_disconnect(const v8::FunctionCallbackInfo<v8::Value>& arguments);
+void Signal_emit(const v8::FunctionCallbackInfo<v8::Value>& arguments);
 
 //----------------------------------------------------------------------------------------------
 // Object APIs
