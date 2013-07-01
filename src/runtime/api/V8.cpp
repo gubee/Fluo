@@ -276,47 +276,78 @@ void Method_name(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
 }
 
 void Method_call(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaMethod* metaMethod = cast(MetaMethod, arguments[0]->IntegerValue());
+    metaMethod->function->invoke();
 }
 
 //----------------------------------------------------------------------------------------------
 // Property APIs
 void Property_name(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaProperty* metaProperty = cast(MetaProperty, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::String::New(metaProperty->name));
 }
 
 void Property_type(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaProperty* metaProperty = cast(MetaProperty, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::Uint32::New(metaProperty->type));
 }
 
 void Property_isReadOnly(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaProperty* metaProperty = cast(MetaProperty, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::Boolean::New(metaProperty->setter != 0));
 }
 
 void Property_read(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaProperty* metaProperty = cast(MetaProperty, arguments[0]->IntegerValue());
+    metaProperty->getter->invoke();
 }
 
 void Property_write(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaProperty* metaProperty = cast(MetaProperty, arguments[0]->IntegerValue());
+    if (!metaProperty->setter) {
+        // TODO: read-only property calling error
+        return;
+    }
+    metaProperty->setter->invoke();
 }
 
 //----------------------------------------------------------------------------------------------
 // Signal APIs
 void Signal_name(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaSignal* metaSignal = cast(MetaSignal, arguments[0]->IntegerValue());
+    arguments.GetReturnValue().Set(v8::String::New(metaSignal->name));
 }
 
 void Signal_connect(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaSignal* metaSignal = cast(MetaSignal, arguments[0]->IntegerValue());
+    Object* sender = cast(Object, arguments[1]->IntegerValue());
+    Object* receiver = cast(Object, arguments[2]->IntegerValue());
+    const MetaMethod* metaMethod = cast(MetaMethod, arguments[3]->IntegerValue());
+    internals::Signal_connect(metaSignal->indexer, sender, receiver, metaMethod);
 }
 
 void Signal_disconnect(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaSignal* metaSignal = cast(MetaSignal, arguments[0]->IntegerValue());
+    Object* sender = cast(Object, arguments[1]->IntegerValue());
+    Object* receiver = cast(Object, arguments[2]->IntegerValue());
+    const MetaMethod* metaMethod = cast(MetaMethod, arguments[3]->IntegerValue());
+    internals::Signal_disconnect(metaSignal->indexer, sender, receiver, metaMethod);
 }
 
 void Signal_emit(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
-    // TODO:
+    v8::HandleScope handleScope;
+    const MetaSignal* metaSignal = cast(MetaSignal, arguments[0]->IntegerValue());
+    Object* sender = cast(Object, arguments[1]->IntegerValue());
+    internals::Signal_emit(metaSignal->indexer, sender);
 }
 
 //----------------------------------------------------------------------------------------------

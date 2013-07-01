@@ -14,8 +14,30 @@
 #include "StackFrame.h"
 
 //----------------------------------------------------------------------------------------------
-// Forward Declarations
-class Signal;
+// Signal
+class Signal {
+public:
+    Signal();
+    ~Signal();
+
+    inline bool empty() const;
+    void connect(Object* receiver, const MetaMethod* method);
+    void disconnect(Object* receiver, const MetaMethod* method);
+    void notify(const Object* sender) const;
+
+public:
+    static const Object* sender();
+
+private:
+    typedef std::list<std::pair<Object*, const MetaMethod*> > Slots;
+
+    Slots m_slots;
+    static const Object* m_sender;
+};
+
+inline bool Signal::empty() const {
+    return m_slots.empty();
+}
 
 namespace internals {
 //----------------------------------------------------------------------------------------------
@@ -42,85 +64,19 @@ namespace internals {
     SignalIndexer* newSignalIndexer(Signal (Class::*member)) {
         return new GenericSignalIndexer<Class>(member);
     }
-}   // namespace internals
 
 //----------------------------------------------------------------------------------------------
-// Signal
-class Signal {
-public:
-    Signal();
-    ~Signal();
-
-    inline bool empty() const;
-    void connect(Object* receiver, const MetaMethod* method);
-    void disconnect(Object* receiver, const MetaMethod* method);
-    void emit() const;
-
-    template <F_TEMPLATE_FORMAL_LIST_1>
-    void emit(F_FUNCTION_FORMAL_LIST_1) const {
-        if (m_slots.empty())
-            return;
-
-        internals::StackFrame_push();
-        internals::StackFrame_set((Object*)0);
-        internals::StackFrame_set(value0);
-        invokeSlots();
-        internals::StackFrame_pop();
+    inline void Signal_connect(SignalIndexer* indexer, Object* sender, Object* receiver, const MetaMethod* metaMethod) {
+        (*indexer)(sender).connect(receiver, metaMethod);
     }
 
-    template <F_TEMPLATE_FORMAL_LIST_2>
-    void emit(F_FUNCTION_FORMAL_LIST_2) const {
-        if (m_slots.empty())
-            return;
-
-        internals::StackFrame_push();
-        internals::StackFrame_set((Object*)0);
-        internals::StackFrame_set(value0);
-        internals::StackFrame_set(value1);
-        invokeSlots();
-        internals::StackFrame_pop();
+    inline void Signal_disconnect(SignalIndexer* indexer, Object* sender, Object* receiver, const MetaMethod* metaMethod) {
+        (*indexer)(sender).disconnect(receiver, metaMethod);
     }
 
-    template <F_TEMPLATE_FORMAL_LIST_3>
-    void emit(F_FUNCTION_FORMAL_LIST_3) const {
-        if (m_slots.empty())
-            return;
-
-        internals::StackFrame_push();
-        internals::StackFrame_set((Object*)0);
-        internals::StackFrame_set(value0);
-        internals::StackFrame_set(value1);
-        internals::StackFrame_set(value2);
-        invokeSlots();
-        internals::StackFrame_pop();
+    inline void Signal_emit(SignalIndexer* indexer, Object* sender) {
+        (*indexer)(sender).notify(sender);
     }
-
-    template <F_TEMPLATE_FORMAL_LIST_4>
-    void emit(F_FUNCTION_FORMAL_LIST_4) const {
-        if (m_slots.empty())
-            return;
-
-        internals::StackFrame_push();
-        internals::StackFrame_set((Object*)0);
-        internals::StackFrame_set(value0);
-        internals::StackFrame_set(value1);
-        internals::StackFrame_set(value2);
-        internals::StackFrame_set(value3);
-        invokeSlots();
-        internals::StackFrame_pop();
-    }
-
-private:
-    void invokeSlots() const;
-
-private:
-    typedef std::list<std::pair<Object*, const MetaMethod*> > Slots;
-
-    Slots m_slots;
-};
-
-inline bool Signal::empty() const {
-    return m_slots.empty();
-}
+}   // namespace internals
 
 #endif /* SIGNAL_H_ */

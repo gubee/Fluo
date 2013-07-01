@@ -74,7 +74,18 @@ const MetaMethod* Object::method(const char* name) const {
     return 0;
 }
 
-void Object::none() {
+none* Object::none() {
+    return 0;
+}
+
+void Object::emit(const Signal& signal) const {
+    if (signal.empty())
+        return;
+
+    internals::StackFrame_push();
+    internals::StackFrame_set((Object*)0);
+    signal.notify(this);
+    internals::StackFrame_pop();
 }
 
 //----------------------------------------------------------------------------------------------

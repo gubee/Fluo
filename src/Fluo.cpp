@@ -27,15 +27,24 @@ struct AA {
 
 class Test : public Object {
     BEGIN_CLASS(Test, Object)
-        SIGNAL("testSignal", testSignal)
+        PROPERTY("readOnly", readOnly, none, bool);
         METHOD("test", test)
+        SIGNAL("testSignal", testSignal)
     END_CLASS()
 
 public:
     Signal testSignal;
 
     void test() {
-        cout << this << ": test called" << endl;
+        cout << this << ": test called(" << Signal::sender() << ")" << endl;
+    }
+
+    void testEmit() {
+        emit(testSignal, Point());
+    }
+
+    bool readOnly() const {
+        return true;
     }
 };
 
@@ -64,9 +73,10 @@ int main() {
     CONNECT(t1, testSignal, t2, test);
     CONNECT(t1, testSignal, t3, test);
 
-    Point p;
+    cout << t1->property("readOnly")->getter << endl;
+    cout << t1->property("readOnly")->setter << endl;
 
-    t1->testSignal.emit(p);
+    t1->testEmit();
 
 //	internals::StackFrame_push();
 //    internals::StackFrame_set(o);
