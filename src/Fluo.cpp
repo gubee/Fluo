@@ -102,10 +102,6 @@ int main() {
 
     const char* ss = "var m = Class_new('ABC', 0); Class_name(m);";
 
-    v8::HandleScope handleScope(v8::Isolate::GetCurrent());
-	v8::Handle<v8::Script> script = v8::Script::Compile(v8::String::New(ss));
-	script->Run();
-
 	List* lb = new BoolList();
     List* li = new IntList();
 //    List* lr = new RealList();
@@ -121,8 +117,6 @@ int main() {
 //    Map* ml = new ListMap();
 //    Map* mm = new MapMap();
 //    Map* mo = new ObjectMap();
-
-    // AAA
 
 	return 0;
 }
