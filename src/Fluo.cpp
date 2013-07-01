@@ -100,9 +100,11 @@ int main() {
     Engine engine;
     engine.startup();
 
-    const char* ss = "var m = Class_new('ABC', 0); console.log('@', Class_name(m));";
+    const char* ss = "var m = Class_new('ABC', 0); Class_name(m);";
 
-    engine.runScript(ss);
+    v8::HandleScope handleScope(v8::Isolate::GetCurrent());
+	v8::Handle<v8::Script> script = v8::Script::Compile(v8::String::New(ss));
+	script->Run();
 
 	List* lb = new BoolList();
     List* li = new IntList();
