@@ -25,7 +25,7 @@ namespace internals {
     StackFrame* StackFrame_push();
     void StackFrame_pop();
 
-    Argument* StackFrame_at(int index);
+    Argument* StackFrame_argument(int index);
 
     void StackFrame_get(int index, bool& value);
     void StackFrame_get(int index, int& value);
@@ -35,6 +35,8 @@ namespace internals {
     void StackFrame_get(int index, Point& value);
     void StackFrame_get(int index, Size& value);
     void StackFrame_get(int index, Rect& value);
+    void StackFrame_get(int index, List*& value);
+    void StackFrame_get(int index, Map*& value);
     void StackFrame_get(int index, Object*& value);
     // TODO:
     //void StackFrame_get(int index, Script*& value);
@@ -48,9 +50,8 @@ namespace internals {
     void StackFrame_set(const Point& value);
     void StackFrame_set(const Size& value);
     void StackFrame_set(const Rect& value);
-    // TODO:
-//    void StackFrame_set(const List* value);
-//    void StackFrame_set(const Map* value);
+    void StackFrame_set(const List* value);
+    void StackFrame_set(const Map* value);
     void StackFrame_set(const Object* value);
     // TODO:
     //void StackFrame_set(const Script* value);

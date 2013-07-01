@@ -35,7 +35,7 @@ public:
     Signal testSignal;
 
     void test() {
-        cout << "test called" << endl;
+        cout << this << ": test called" << endl;
     }
 };
 

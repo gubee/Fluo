@@ -36,7 +36,7 @@ void Signal::emit() const {
 }
 
 void Signal::invokeSlots() const {
-    Argument* argument = internals::StackFrame_at(0);
+    Argument* argument = internals::StackFrame_argument(0);
 
     Slots::const_iterator i(m_slots.begin());
     Slots::const_iterator e(m_slots.end());
