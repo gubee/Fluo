@@ -431,8 +431,10 @@ void Runtime::shutdown() {
     m_data = 0;
 }
 
-void Runtime::runScript(const char* script) {
-    // TODO:
+void Runtime::runScript(const char* source) {
+    v8::HandleScope handleScope;
+    v8::Handle<v8::Script> script = v8::Script::Compile(v8::String::New(source));
+    script->Run();
 }
 
 #endif  // F_RUNTIME_V8

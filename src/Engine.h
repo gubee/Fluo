@@ -17,6 +17,7 @@ public:
 
     void startup();
     void shutdown();
+    void runScript(const char* source);
 
 private:
     Runtime* m_runtime;

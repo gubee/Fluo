@@ -23,3 +23,7 @@ void Engine::startup() {
 void Engine::shutdown() {
     m_runtime->shutdown();
 }
+
+void Engine::runScript(const char* source) {
+    m_runtime->runScript(source);
+}

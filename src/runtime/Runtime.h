@@ -15,7 +15,7 @@ public:
 
     void startup();
     void shutdown();
-    void runScript(const char* script);
+    void runScript(const char* source);
 
 private:
     struct Data;
