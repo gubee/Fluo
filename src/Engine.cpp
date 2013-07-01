@@ -18,6 +18,7 @@ Engine::~Engine() {
 
 void Engine::startup() {
     m_runtime->startup();
+    m_runtime->startup();
 }
 
 void Engine::shutdown() {
