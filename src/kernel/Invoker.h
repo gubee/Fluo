@@ -12,6 +12,8 @@
 #include "TypeTraits.h"
 #include "StackFrame.h"
 
+//----------------------------------------------------------------------------------------------
+// Utilities
 #define F_DECLARE_GENERIC_INVOKER(returnType, argumentList)             \
     typedef returnType (Class::*MemberPtr)(argumentList);               \
     typedef returnType (Class::*ConstMemberPtr)(argumentList) const;    \
@@ -174,6 +176,10 @@ namespace internals {
     };
 
 //----------------------------------------------------------------------------------------------
+    inline Invoker* newInvoker(none* (Object::*method)()) {
+        return 0;
+    }
+
     template <typename Class, typename Return>
     Invoker* newInvoker(Return (Class::*method)()) {
         typedef GenericInvoker<Class, Return> InvokerType;

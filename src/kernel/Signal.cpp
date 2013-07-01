@@ -25,19 +25,10 @@ void Signal::disconnect(Object* receiver, const MetaMethod* method) {
         m_slots.erase(i);
 }
 
-void Signal::emit() const {
-    if (m_slots.empty())
-        return;
+void Signal::notify(const Object* sender) const {
+    m_sender = sender;
 
-    internals::StackFrame_push();
-    internals::StackFrame_set((Object*)0);
-    invokeSlots();
-    internals::StackFrame_pop();
-}
-
-void Signal::invokeSlots() const {
-    Argument* argument = internals::StackFrame_at(0);
-
+    Argument* argument = internals::StackFrame_argument(0);
     Slots::const_iterator i(m_slots.begin());
     Slots::const_iterator e(m_slots.end());
     for (; i != e; ++i) {
@@ -46,4 +37,12 @@ void Signal::invokeSlots() const {
         argument->object = receiver;
         invoker->invoke();
     }
+
+    m_sender = 0;
 }
+
+const Object* Signal::sender() {
+    return m_sender;
+}
+
+const Object* Signal::m_sender = 0;

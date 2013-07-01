@@ -24,11 +24,16 @@ namespace internals {
     //----------------------------------------------------------------------------------------------
     // Utilities
     inline Argument* at(int index) {
+        // TODO:
+        //F_ASSERT(topStackFrame != 0);
+        //F_ASSERT(index < topStackFrame->argumentCount);
         int frameOffset = topStackFrame->arguments[index];
         return cast(Argument, topStackFrame->framePointer + frameOffset);
     }
 
     inline Argument* push(int allocationSize) {
+        // TODO:
+        //F_ASSERT(topStackFrame != 0);
         int index = topStackFrame->argumentCount;
         int frameOffset = topStackFrame->arguments[index];
         Argument* argument = cast(Argument, topStackFrame->framePointer + frameOffset);
@@ -72,7 +77,7 @@ namespace internals {
         stackPointer = asAddress(topStackFrame);
     }
 
-    Argument* StackFrame_at(int index) {
+    Argument* StackFrame_argument(int index) {
         return at(index);
     }
 
@@ -114,6 +119,16 @@ namespace internals {
     void StackFrame_get(int index, Rect& value) {
         Argument* argument = at(index);
         value = *cast(Rect, argument->geometry);
+    }
+
+    void StackFrame_get(int index, List*& value) {
+        Argument* argument = at(index);
+        value = argument->list;
+    }
+
+    void StackFrame_get(int index, Map*& value) {
+        Argument* argument = at(index);
+        value = argument->map;
     }
 
     void StackFrame_get(int index, Object*& value) {
@@ -201,9 +216,17 @@ namespace internals {
         new (argument->geometry) Rect(value);
     }
 
-    // TODO:
-//    void StackFrame_set(const List* value);
-//    void StackFrame_set(const Map* value);
+    void StackFrame_set(const List* value) {
+        Argument* argument = push(POINTER_SIZE);
+        argument->type = ListType;
+        argument->constList = value;
+    }
+
+    void StackFrame_set(const Map* value) {
+        Argument* argument = push(POINTER_SIZE);
+        argument->type = MapType;
+        argument->constMap = value;
+    }
 
     void StackFrame_set(const Object* value) {
         Argument* argument = push(POINTER_SIZE);

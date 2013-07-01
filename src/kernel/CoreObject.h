@@ -29,8 +29,64 @@ public:
     const MetaProperty* property(const char* name) const;
     const MetaMethod* method(const char* name) const;
 
-protected:
-    void none();
+    void emit(const Signal& signal) const;
+
+    template <F_TEMPLATE_FORMAL_LIST_1>
+    void emit(const Signal& signal, F_FUNCTION_FORMAL_LIST_1) const {
+        if (signal.empty())
+            return;
+
+        internals::StackFrame_push();
+        internals::StackFrame_set((Object*) 0);
+        internals::StackFrame_set(value0);
+        signal.notify(this);
+        internals::StackFrame_pop();
+    }
+
+    template <F_TEMPLATE_FORMAL_LIST_2>
+    void emit(const Signal& signal, F_FUNCTION_FORMAL_LIST_2) const {
+        if (signal.empty())
+            return;
+
+        internals::StackFrame_push();
+        internals::StackFrame_set((Object*) 0);
+        internals::StackFrame_set(value0);
+        internals::StackFrame_set(value1);
+        signal.notify(this);
+        internals::StackFrame_pop();
+    }
+
+    template <F_TEMPLATE_FORMAL_LIST_3>
+    void emit(const Signal& signal, F_FUNCTION_FORMAL_LIST_3) const {
+        if (signal.empty())
+            return;
+
+        internals::StackFrame_push();
+        internals::StackFrame_set((Object*) 0);
+        internals::StackFrame_set(value0);
+        internals::StackFrame_set(value1);
+        internals::StackFrame_set(value2);
+        signal.notify(this);
+        internals::StackFrame_pop();
+    }
+
+    template <F_TEMPLATE_FORMAL_LIST_4>
+    void emit(const Signal& signal, F_FUNCTION_FORMAL_LIST_4) const {
+        if (signal.empty())
+            return;
+
+        internals::StackFrame_push();
+        internals::StackFrame_set((Object*) 0);
+        internals::StackFrame_set(value0);
+        internals::StackFrame_set(value1);
+        internals::StackFrame_set(value2);
+        internals::StackFrame_set(value3);
+        signal.notify(this);
+        internals::StackFrame_pop();
+    }
+
+public:
+    struct none* none();
 
 private:
     std::string m_objectName;
