@@ -74,6 +74,16 @@ const MetaMethod* Object::method(const char* name) const {
     return 0;
 }
 
+bool Object::isInstanceOf(const MetaClass* other) const {
+    const MetaClass* metaClass = this->metaClass();
+    while (metaClass) {
+        if (metaClass == other)
+            return true;
+        metaClass = metaClass->base;
+    }
+    return false;
+}
+
 none* Object::none() {
     return 0;
 }

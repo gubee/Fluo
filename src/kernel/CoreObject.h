@@ -28,6 +28,7 @@ public:
     const MetaSignal* signal(const char* name) const;
     const MetaProperty* property(const char* name) const;
     const MetaMethod* method(const char* name) const;
+    bool isInstanceOf(const MetaClass* other) const;
 
     void emit(const Signal& signal) const;
 

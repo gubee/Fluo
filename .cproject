@@ -144,6 +144,7 @@
 		<configuration configurationName="Release">
 			<resource resourceType="PROJECT" workspacePath="/Fluo"/>
 		</configuration>
+		<configuration configurationName="Release.V8.OSX"/>
 		<configuration configurationName="Debug.V8.OSX">
 			<resource resourceType="PROJECT" workspacePath="/Fluo"/>
 		</configuration>
