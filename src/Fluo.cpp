@@ -76,6 +76,9 @@ int main() {
     cout << t1->property("readOnly")->getter << endl;
     cout << t1->property("readOnly")->setter << endl;
 
+    cout << t1->property("readOnly")->getter << endl;
+    cout << t1->property("readOnly")->setter << endl;
+
     t1->testEmit();
 
 //	internals::StackFrame_push();
