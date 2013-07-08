@@ -5,6 +5,7 @@
  *      Author: gubee
  */
 
+#include <cstring>
 #include <string>
 #include "Point.h"
 #include "Size.h"

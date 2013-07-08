@@ -31,7 +31,7 @@ template <typename T>
 class TypedList : public List {
 public:
     typedef typename internals::ListContainerType<T>::result Container;
-    typedef TypeCast<T> TypeCast;
+    typedef ::TypeCast<T> TypeCast;
 
 public:
     TypedList()

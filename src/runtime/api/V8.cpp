@@ -7,6 +7,7 @@
 
 #if defined(F_RUNTIME_V8)
 
+#include <cstring>
 #include "kernel/CoreObject.h"
 #include "kernel/ClassRegistry.h"
 #include "kernel/StackFrame.h"

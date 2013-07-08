@@ -20,7 +20,7 @@ template <typename T>
 class TypedMap : public Map {
 public:
     typedef std::map<std::string, T> Container;
-    typedef TypeCast<T> TypeCast;
+    typedef ::TypeCast<T> TypeCast;
 
 public:
     TypedMap()

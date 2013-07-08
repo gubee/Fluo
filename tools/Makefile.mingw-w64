@@ -1,0 +1,59 @@
+MINGW_W64_TOOLCHAIN_PATH ?= ~/Documents/library/mingw-w32-bin_i686-darwin_20130531
+OUTDIR ?= out
+MODES := debug release
+TARGETS := v8_base.ia32 v8_nosnapshot v8_snapshot
+
+.PHONY: prerequisite clean all mingw-w64.debug mingw-w64.release
+
+all: mingw-w64.debug mingw-w64.release
+
+mingw-w64.debug: prerequisite $(OUTDIR)/mingw-w64.debug/libv8_base.ia32.a $(OUTDIR)/mingw-w64.debug/libv8_nosnapshot.a $(OUTDIR)/mingw-w64.debug/libv8_snapshot.a
+mingw-w64.release: prerequisite $(OUTDIR)/mingw-w64.release/libv8_base.ia32.a $(OUTDIR)/mingw-w64.release/libv8_nosnapshot.a $(OUTDIR)/mingw-w64.release/libv8_snapshot.a
+
+prerequisite:
+	@mkdir -p $(OUTDIR)
+
+$(OUTDIR)/mingw-w64.debug/libv8_base.ia32.a:
+	@$(MAKE) -f Makefile.mingw-w64.mk \
+				MINGW_W64_TOOLCHAIN_PATH=$(MINGW_W64_TOOLCHAIN_PATH) \
+	            OUTDIR=$(OUTDIR) \
+	            TARGET=v8_base.ia32 \
+	            MODE=debug
+
+$(OUTDIR)/mingw-w64.debug/libv8_nosnapshot.a:
+	@$(MAKE) -f Makefile.mingw-w64.mk \
+				MINGW_W64_TOOLCHAIN_PATH=$(MINGW_W64_TOOLCHAIN_PATH) \
+	            OUTDIR=$(OUTDIR) \
+	            TARGET=v8_nosnapshot \
+	            MODE=debug
+
+$(OUTDIR)/mingw-w64.debug/libv8_snapshot.a:
+	@$(MAKE) -f Makefile.mingw-w64.mk \
+				MINGW_W64_TOOLCHAIN_PATH=$(MINGW_W64_TOOLCHAIN_PATH) \
+	            OUTDIR=$(OUTDIR) \
+	            TARGET=v8_snapshot \
+	            MODE=debug
+
+$(OUTDIR)/mingw-w64.release/libv8_base.ia32.a:
+	@$(MAKE) -f Makefile.mingw-w64.mk \
+				MINGW_W64_TOOLCHAIN_PATH=$(MINGW_W64_TOOLCHAIN_PATH) \
+	            OUTDIR=$(OUTDIR) \
+	            TARGET=v8_base.ia32 \
+	            MODE=release
+
+$(OUTDIR)/mingw-w64.release/libv8_nosnapshot.a:
+	@$(MAKE) -f Makefile.mingw-w64.mk \
+				MINGW_W64_TOOLCHAIN_PATH=$(MINGW_W64_TOOLCHAIN_PATH) \
+	            OUTDIR=$(OUTDIR) \
+	            TARGET=v8_nosnapshot \
+	            MODE=release
+
+$(OUTDIR)/mingw-w64.release/libv8_snapshot.a:
+	@$(MAKE) -f Makefile.mingw-w64.mk \
+				MINGW_W64_TOOLCHAIN_PATH=$(MINGW_W64_TOOLCHAIN_PATH) \
+	            OUTDIR=$(OUTDIR) \
+	            TARGET=v8_snapshot \
+	            MODE=release
+
+clean:
+	@rm -rf $(OUTDIR)/mingw-w64.debug $(OUTDIR)/mingw-w64.release

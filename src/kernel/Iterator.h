@@ -17,7 +17,7 @@ class TypedIterator : public Iterator {
 public:
     typedef typename Container::const_iterator Iterator;
     typedef typename Container::value_type::second_type ValueType;
-    typedef TypeCast<ValueType> TypeCast;
+    typedef ::TypeCast<ValueType> TypeCast;
 
 public:
     TypedIterator(const Container& container)
