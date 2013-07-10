@@ -42,6 +42,7 @@ mkdir -p ${OUTPUTPATH}/src
 mkdir -p ${OUTPUTPATH}/res/values
 mkdir -p ${OUTPUTPATH}/libs
 mkdir -p ${OUTPUTPATH}/bin/lib/armeabi
+mkdir -p ${OUTPUTPATH}/bin/lib/armeabi-v7a
 cp -a ${INPUTPATH}/* ${OUTPUTPATH}/bin
 cp ${ENGINE} ${OUTPUTPATH}/bin/lib/armeabi
 sed -e "s/package=\"PackageName\"/package=\"${PACKAGE}\"/g" \
