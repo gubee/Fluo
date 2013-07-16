@@ -47,7 +47,7 @@ CFLAGS.release += \
 	-W \
 	-Wno-unused-local-typedefs \
 	-Wno-unused-parameter \
-	-Wno-strict-overflow	\
+	-Wno-strict-overflow \
 	-fno-strict-aliasing \
 	-fmessage-length=0
 
