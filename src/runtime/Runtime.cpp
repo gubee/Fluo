@@ -11,7 +11,7 @@
 #include "api/SpiderMonkey.h"
 #include "api/JavaScriptCore.h"
 
-#if !defined(F_RUNTIME_EMSCRIPTEN) && !defined(F_RUNTIME_FLASCC)
+#if !defined(F_RUNTIME_EMSCRIPTEN) && !defined(F_RUNTIME_FLASCC) && !defined(F_PLATFORM_ANDROID) // ##TODO
 namespace internals {
 #define F_API(function)     {#function, ::function}
 #define F_API_END           {0, 0}

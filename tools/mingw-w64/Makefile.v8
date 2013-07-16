@@ -1,0 +1,253 @@
+
+TOOLCHAIN = $(FLUO_TOOLCHAINS)/MinGW-W64
+TOOLCHAIN_PREFIX = i686-w64-mingw32-
+# TARGET = 
+SOURCEDIRS = 
+OUTDIR = $(V8DIR)/out
+# OBJDIR =
+# MODE =
+# ARCH =
+# INCLUDES =
+OBJS = 
+
+V8DIR := ~/Documents/project/JavaScriptEngine/v8
+V8SOURCE := $(V8DIR)/src
+V8TOOL := $(V8DIR)/tools
+V8MKSNAPSHOT := 
+V8COMPONENTS := v8_base.ia32 v8_nosnapshot v8_snapshot
+V8LIBRARIES := \
+	runtime.js \
+	v8natives.js \
+	array.js \
+	string.js \
+	uri.js \
+	math.js \
+	messages.js \
+	apinatives.js \
+	debug-debugger.js \
+	mirror-debugger.js \
+	liveedit-debugger.js \
+	date.js \
+	json.js \
+	regexp.js \
+	macros.py
+
+V8EXPERIMENTAL-LIBRARIES := \
+	macros.py \
+	symbol.js \
+	proxy.js \
+	collection.js \
+	object-observe.js \
+	arraybuffer.js \
+	typedarray.js \
+	generator.js
+
+TARGETS.debug := $(addsuffix .debug, $(V8COMPONENTS))
+TARGETS.release := $(addsuffix .release, $(V8COMPONENTS))
+TARGETS := $(TARGETS.debug) $(TARGETS.release)
+
+.PHONY: $(TARGETS)
+
+all: .pre $(TARGETS) .post
+	@echo > /dev/null
+
+clean: 
+	@rm -rf $(OUTDIR)/mingw-w64.debug
+	@rm -rf $(OUTDIR)/mingw-w64.release
+	
+.pre:
+
+.post:
+
+OBJS.v8_base.ia32 := \
+	accessors.o \
+	allocation.o \
+	api.o \
+	arguments.o \
+	assembler.o \
+	ast.o \
+	atomicops_internals_x86_gcc.o \
+	bignum-dtoa.o \
+	bignum.o \
+	bootstrapper.o \
+	builtins.o \
+	cached-powers.o \
+	checks.o \
+	circular-queue.o \
+	code-stubs.o \
+	code-stubs-hydrogen.o \
+	codegen.o \
+	compilation-cache.o \
+	compiler.o \
+	contexts.o \
+	conversions.o \
+	counters.o \
+	cpu-profiler.o \
+	data-flow.o \
+	date.o \
+	dateparser.o \
+	debug-agent.o \
+	debug.o \
+	deoptimizer.o \
+	disassembler.o \
+	diy-fp.o \
+	dtoa.o \
+	elements-kind.o \
+	elements.o \
+	execution.o \
+	extensions/externalize-string-extension.o \
+	extensions/gc-extension.o \
+	extensions/statistics-extension.o \
+	factory.o \
+	fast-dtoa.o \
+	fixed-dtoa.o \
+	flags.o \
+	frames.o \
+	full-codegen.o \
+	func-name-inferrer.o \
+	gdb-jit.o \
+	global-handles.o \
+	handles.o \
+	heap-profiler.o \
+	heap-snapshot-generator.o \
+	heap.o \
+	hydrogen-environment-liveness.o \
+	hydrogen-instructions.o \
+	hydrogen.o \
+	hydrogen-gvn.o \
+	ic.o \
+	incremental-marking.o \
+	interface.o \
+	interpreter-irregexp.o \
+	isolate.o \
+	jsregexp.o \
+	lithium-allocator.o \
+	lithium.o \
+	liveedit.o \
+	log-utils.o \
+	log.o \
+	mark-compact.o \
+	marking-thread.o \
+	messages.o \
+	objects-debug.o \
+	objects-printer.o \
+	objects-visiting.o \
+	objects.o \
+	once.o \
+	optimizing-compiler-thread.o \
+	parser.o \
+	preparse-data.o \
+	preparser.o \
+	prettyprinter.o \
+	profile-generator.o \
+	property.o \
+	regexp-macro-assembler-irregexp.o \
+	regexp-macro-assembler-tracer.o \
+	regexp-macro-assembler.o \
+	regexp-stack.o \
+	rewriter.o \
+	runtime-profiler.o \
+	runtime.o \
+	safepoint-table.o \
+	sampler.o \
+	scanner-character-streams.o \
+	scanner.o \
+	scopeinfo.o \
+	scopes.o \
+	serialize.o \
+	snapshot-common.o \
+	spaces.o \
+	store-buffer.o \
+	string-search.o \
+	string-stream.o \
+	strtod.o \
+	stub-cache.o \
+	sweeper-thread.o \
+	token.o \
+	transitions.o \
+	type-info.o \
+	types.o \
+	typing.o \
+	unicode.o \
+	utils.o \
+	v8-counters.o \
+	v8.o \
+	v8conversions.o \
+	v8threads.o \
+	v8utils.o \
+	variables.o \
+	version.o \
+	zone.o \
+	ia32/assembler-ia32.o \
+	ia32/builtins-ia32.o \
+	ia32/code-stubs-ia32.o \
+	ia32/codegen-ia32.o \
+	ia32/cpu-ia32.o \
+	ia32/debug-ia32.o \
+	ia32/deoptimizer-ia32.o \
+	ia32/disasm-ia32.o \
+	ia32/frames-ia32.o \
+	ia32/full-codegen-ia32.o \
+	ia32/ic-ia32.o \
+	ia32/lithium-codegen-ia32.o \
+	ia32/lithium-gap-resolver-ia32.o \
+	ia32/lithium-ia32.o \
+	ia32/macro-assembler-ia32.o \
+	ia32/regexp-macro-assembler-ia32.o \
+	ia32/stub-cache-ia32.o \
+	platform-win32.o \
+	win32-math.o
+
+OBJS.v8_nosnapshot := \
+	libraries.o \
+	experimental-libraries.o \
+	snapshot-empty.o
+
+OBJS.v8_snapshot := \
+	libraries.o \
+	experimental-libraries.o \
+	snapshot.o
+
+DEFINES.debug := \
+	-DENABLE_DEBUGGER_SUPPORT \
+	-DV8_TARGET_ARCH_IA32 \
+	-DDEBUG \
+	-DENABLE_DISASSEMBLER \
+	-DV8_ENABLE_CHECKS \
+	-DOBJECT_PRINT \
+	-DVERIFY_HEAP \
+	-DENABLE_EXTRA_CHECKS
+
+DEFINES.release := \
+	-DENABLE_DEBUGGER_SUPPORT \
+	-DV8_TARGET_ARCH_IA32
+
+define TARGETRULE
+$(1).$(2): $$(OUTDIR)/mingw-w64.$(2)/lib$(1).a
+$$(OUTDIR)/mingw-w64.$(2)/lib$(1).a:
+	@echo '[TARGET: $(1).$(2)]'
+	@$(MAKE) -f Makefile.v8.mk \
+				TOOLCHAIN="$$(TOOLCHAIN)" \
+				TOOLCHAIN_PREFIX="$$(TOOLCHAIN_PREFIX)" \
+				TARGET="$(1)" \
+				SOURCEDIRS="$$(V8SOURCE) $$(OUTDIR)/mingw-w64.$(2)/obj/gen" \
+	            OUTDIR="$$(OUTDIR)/mingw-w64.$(2)" \
+				OBJDIR="obj.target/$(1)" \
+	            MODE="$(2)" \
+	            OBJS="$$(OBJS.$(1))" \
+	            DEFINES="$$(DEFINES.debug)" \
+	            INCLUDES="-I $$(V8SOURCE)" \
+	            V8SOURCE="$(V8SOURCE)" \
+	            V8TOOL="$(V8TOOL)" \
+	            V8MKSNAPSHOT="$$(OUTDIR)/ia32.$(2)/mksnapshot.ia32" \
+	            V8LIBRARIES="$(V8LIBRARIES)" \
+	            V8EXPERIMENTAL-LIBRARIES="$(V8EXPERIMENTAL-LIBRARIES)"
+	@echo ' '
+endef
+
+$(eval $(call TARGETRULE,v8_base.ia32,debug))
+$(eval $(call TARGETRULE,v8_base.ia32,release))
+$(eval $(call TARGETRULE,v8_nosnapshot,debug))
+$(eval $(call TARGETRULE,v8.nosnapshot,release))
+$(eval $(call TARGETRULE,v8_snapshot,debug))
+$(eval $(call TARGETRULE,v8.snapshot,release))

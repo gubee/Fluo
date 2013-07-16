@@ -1,0 +1,54 @@
+
+TOOLCHAIN = $(FLUO_TOOLCHAINS)/Android-NDK-ARM
+TOOLCHAIN_PREFIX = arm-linux-androideabi-
+TARGET = ndk-glue
+SOURCEDIRS = $(ANDROID_NDK)/sources/android/native_app_glue
+OUTDIR = $(TOOLDIR)/$(TARGET)
+OBJDIR = obj.target
+# MODE =
+# ARCH =
+# INCLUDES =
+OBJS = android_native_app_glue.o
+
+TOOLDIR = ..
+ABIS = \
+	armeabi \
+	armeabi-v7a
+TARGETS.debug := $(addsuffix .debug, $(ABIS))
+TARGETS.release := $(addsuffix .release, $(ABIS))
+TARGETS := $(TARGETS.debug) $(TARGETS.release)
+
+.PHONY: $(TARGETS)
+
+all: .pre $(TARGETS) .post
+	@echo > /dev/null
+
+clean: 
+	@rm -rf $(OUTDIR)
+	
+.pre:
+
+.post:
+	@rm -rf $(OUTDIR)/*/$(OBJDIR)
+
+define TARGETRULE
+$(1).$(2): $$(OUTDIR)/$(1).$(2)/lib$$(TARGET).a
+$$(OUTDIR)/$(1).$(2)/lib$$(TARGET).a:
+	@echo '[TARGET: $(1).$(2)]'
+	@$(MAKE) -f Makefile.ndk-glue.mk \
+				TOOLCHAIN="$$(TOOLCHAIN)" \
+				TOOLCHAIN_PREFIX="$$(TOOLCHAIN_PREFIX)" \
+				TARGET="$$(TARGET)" \
+				SOURCEDIRS="$$(SOURCEDIRS)" \
+	            OUTDIR="$$(OUTDIR)/$(1).$(2)" \
+				OBJDIR="$$(OBJDIR)" \
+	            MODE="$(2)" \
+	            ARCH="-march=$(3)" \
+	            OBJS="$$(OBJS)"
+	@echo ' '
+endef
+
+$(eval $(call TARGETRULE,armeabi,debug,armv5te))
+$(eval $(call TARGETRULE,armeabi,release,armv5te))
+$(eval $(call TARGETRULE,armeabi-v7a,debug,armv7-a))
+$(eval $(call TARGETRULE,armeabi-v7a,release,armv7-a))
