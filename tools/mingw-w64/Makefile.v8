@@ -46,7 +46,7 @@ TARGETS.debug := $(addsuffix .debug, $(V8COMPONENTS))
 TARGETS.release := $(addsuffix .release, $(V8COMPONENTS))
 TARGETS := $(TARGETS.debug) $(TARGETS.release)
 
-.PHONY: $(TARGETS)
+.PHONY:
 
 all: .pre $(TARGETS) .post
 	@echo > /dev/null
@@ -235,7 +235,7 @@ $$(OUTDIR)/mingw-w64.$(2)/lib$(1).a:
 				OBJDIR="obj.target/$(1)" \
 	            MODE="$(2)" \
 	            OBJS="$$(OBJS.$(1))" \
-	            DEFINES="$$(DEFINES.debug)" \
+	            DEFINES="$$(DEFINES.$(2))" \
 	            INCLUDES="-I $$(V8SOURCE)" \
 	            V8SOURCE="$(V8SOURCE)" \
 	            V8TOOL="$(V8TOOL)" \
@@ -248,6 +248,6 @@ endef
 $(eval $(call TARGETRULE,v8_base.ia32,debug))
 $(eval $(call TARGETRULE,v8_base.ia32,release))
 $(eval $(call TARGETRULE,v8_nosnapshot,debug))
-$(eval $(call TARGETRULE,v8.nosnapshot,release))
+$(eval $(call TARGETRULE,v8_nosnapshot,release))
 $(eval $(call TARGETRULE,v8_snapshot,debug))
-$(eval $(call TARGETRULE,v8.snapshot,release))
+$(eval $(call TARGETRULE,v8_snapshot,release))
