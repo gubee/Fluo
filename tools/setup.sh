@@ -9,7 +9,8 @@ toolChainPath=${mainDir}/Toolchains
 emscriptenDir=Emscripten
 flasccDir=FlasCC
 mingwDir=MinGW-W64
-downloadMingwVer=mingw-w64-bin_i686-darwin_20130622 # download version file name on sourceforge.net
+androidNDKDir=Android-NDK
+androidSDKDir=Android-SDK
 
 javaScriptEnginePath=${mainDir}/JavaScriptEngines
 v8Dir=V8
@@ -43,16 +44,41 @@ echo "###### wget minGW ######"
 #-----------------------------------------------------------------------
 if [ ! -d $toolChainPath/$mingwDir ]
 then
+	downloadMingwVer=mingw-w64-bin_i686-darwin_20130622 # download version file name on sourceforge.net
 	mkdir -p $toolChainPath/$mingwDir
 	cd $toolChainPath/$mingwDir
 	wget http://sourceforge.net/projects/mingw-w64/files/${downloadMingwVer}.tar.bz2
 	tar -xvf ${downloadMingwVer}.tar.bz2
-	mv $toolChainPath/${downloadVer} $toolChainPath/$mingwDir
+	rm -r ${downloadMingwVer}.tar.bz2
 else
 	echo "minGW arleady installed"
 fi
-lowMingwDir=$(echo $mingwDir | tr '[A-Z]' '[a-z]')
-ln -s $toolChainPath/$mingwDir $linkToolChainDir/$lowMingwDir
+
+if [ ! -d $linkToolChainDir/$mingwDir ]
+then
+	ln -s $toolChainPath/$mingwDir $linkToolChainDir/$mingwDir
+fi
+	
+#-----------------------------------------------------------------------
+echo "###### wget androidNDK ######"
+#-----------------------------------------------------------------------
+if [ ! -d $toolChainPath/$androidNDKDir ]
+then
+	downloadAndroidNDKVerName=android-ndk-r8e
+	downloadAndroidNDKVer=android-ndk-r8e-darwin-x86_64.tar.bz2
+	cd $toolChainPath
+	wget http://dl.google.com/android/ndk/${downloadAndroidNDKVer}.tar.bz2
+	tar -xvf ${downloadAndroidNDKVer}.tar.bz2
+	rm -r ${downloadAndroidNDKVer}.tar.bz2
+	mv $toolChainPath/$downloadAndroidNDKVerName $toolChainPath/$androidNDKDir
+else
+	echo "androidNDK arleady installed"
+fi
+
+if [ ! -d $linkToolChainDir/$androidNDKDir ]
+then
+	ln -s $toolChainPath/$androidNDKDir $linkToolChainDir/$androidNDKDir
+fi
 
 #-----------------------------------------------------------------------
 echo "###### git emscripten ######"
@@ -65,8 +91,11 @@ else
 	cd $toolChainPath
 	git clone --depth 1 git://github.com/kripken/emscripten.git $emscriptenDir
 fi
-lowEmscriptenDir=$(echo $emscriptenDir | tr '[A-Z]' '[a-z]')
-ln -s $toolChainPath/$emscriptenDir $linkToolChainDir/$lowEmscriptenDir
+
+if [ ! -d $linkToolChainDir/$emscriptenDir ]
+then
+	ln -sf $toolChainPath/$emscriptenDir $linkToolChainDir/$emscriptenDir
+fi
 
 #-----------------------------------------------------------------------
 echo "###### git flascc ######"
@@ -79,8 +108,11 @@ else
 	cd $toolChainPath
 	git clone --depth 1 git://github.com/adobe-flash/crossbridge.git $flasccDir
 fi
-lowFlasccDir=$(echo $flasccDir | tr '[A-Z]' '[a-z]')
-ln -s $toolChainPath/$flasccDir $linkToolChainDir/$lowFlasccDir
+
+if [ ! -d $linkToolChainDir/$flasccDir ]
+then
+	ln -sf $toolChainPath/$flasccDir $linkToolChainDir/$flasccDir
+fi
 
 ########################################################################
 # Download JavaScripteEngines
@@ -114,6 +146,30 @@ then
 else
 	git clone --depth 1 https://github.com/WebKit/webkit.git $javaScriptCoreDir
 fi
+
+########################################################################
+# Download Others
+########################################################################
+
+#-----------------------------------------------------------------------
+echo "###### wget androidSDK ######"
+#-----------------------------------------------------------------------
+if [ ! -d $mainDir/$androidSDKDir ]
+then
+	downloadAndroidSDKVer=adt-bundle-mac-x86_64-20130522
+	cd $mainDir
+	wget http://dl.google.com/android/adt/${downloadAndroidSDKVer}.zip
+	tar -xvf ${downloadAndroidSDKVer}.zip
+	rm -r ${downloadAndroidSDKVer}.zip
+	downloadAndroidSDKVerName=$(echo "adt-*")
+	echo $downloadAndroidSDKVerName
+	if [ -d $mainDir/$downloadAndroidSDKVerName ]; then
+		mv $mainDir/$downloadAndroidSDKVerName $mainDir/$androidSDKDir
+	fi
+else
+	echo "androidSDK arleady installed"
+fi
+
 
 echo "Download is finished, type the following in terminal"
 echo "export FLUO_TOOLCHAINS=$linkToolChainDir > ~/.profile"
