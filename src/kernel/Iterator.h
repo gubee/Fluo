@@ -9,6 +9,7 @@
 #define ITERATOR_H_
 
 #include "CoreType.h"
+#include "TypeTraits.h"
 
 //----------------------------------------------------------------------------------------------
 // TypedIterator<>

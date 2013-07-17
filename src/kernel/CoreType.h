@@ -12,13 +12,24 @@
 #include <string>
 #include <vector>
 
+//----------------------------------------------------------------------------------------------
+// Runtime
 #if defined(F_RUNTIME_EMSCRIPTEN)
-#elif defined(F_RUNTIME_FLASCC)
-#elif defined(F_RUNTIME_V8)
+#endif  // F_RUNTIME_EMSCRIPTEN
+
+#if defined(F_RUNTIME_FLASCC)
+#endif  // F_RUNTIME_FLASCC
+
+#if defined(F_RUNTIME_V8)
 #include <v8.h>
-#elif defined(F_RUNTIME_SPIDERMONKEY)
-#elif defined(F_RUNTIME_JAVASCRIPTCORE)
-#endif
+#endif  // F_RUNTIME_V8
+
+#if defined(F_RUNTIME_SPIDERMONKEY)
+#endif  // F_RUNTIME_SPIDERMONKEY
+
+#if defined(F_RUNTIME_JAVASCRIPTCORE)
+#include <JavaScriptCore/JSBase.h>
+#endif  // F_RUNTIME_JAVASCRIPTCORE
 
 //----------------------------------------------------------------------------------------------
 // Forward Declarations
@@ -52,6 +63,7 @@ typedef intptr_t Handle;
 #define cast(type, from)            reinterpret_cast<type*>(from)
 #define asAddress(from)             reinterpret_cast<Address>(from)
 #define asHandle(from)              reinterpret_cast<Handle>(from)
+#define asInteger(from)             static_cast<intptr_t>(from)
 
 //----------------------------------------------------------------------------------------------
 // Value / ScriptValue
@@ -60,101 +72,46 @@ typedef intptr_t Handle;
 typedef void* Value;
 typedef void* ValueReference;
 // TODO: ScriptValue
-#elif defined(F_RUNTIME_FLASCC)
-#elif defined(F_RUNTIME_V8)
+typedef void* RuntimeContext;
+#endif  // F_RUNTIME_EMSCRIPTEN
+
+#if defined(F_RUNTIME_FLASCC)
+// TODO:
+#endif  // F_RUNTIME_FLASCC
+
+#if defined(F_RUNTIME_V8)
 typedef v8::Handle<v8::Value> Value;
 typedef const v8::Handle<v8::Value>& ValueReference;
 typedef v8::Handle<v8::Value> ScriptValue;
-#elif defined(F_RUNTIME_SPIDERMONKEY)
+typedef v8::Isolate* RuntimeContext;
+#endif  // F_RUNTIME_V8
+
+#if defined(F_RUNTIME_SPIDERMONKEY)
 typedef JS::Value Value;
 typedef const JS::Value& ValueReference;
 typedef JS::Value ScriptValue;
-#elif defined(F_RUNTIME_JAVASCRIPTCORE)
-typedef JSC::Value Value;
-typedef const JSC::Value& ValueReference;
-typedef JSC::Value ScriptValue;
-#endif
+// TODO: RuntimeContext
+#endif  // F_RUNTIME_SPIDERMONKEY
 
-template <typename T>
-struct TypeCast {
-    inline static T fromValue(ValueReference value) {
-        return T();
-    }
-
-    template <typename U>
-    inline static Value toValue(U value) {
-        return Value();
-    }
-};
-
-#if defined(F_RUNTIME_EMSCRIPTEN)
-#elif defined(F_RUNTIME_FLASCC)
-#elif defined(F_RUNTIME_V8)
-
-template <>
-struct TypeCast<bool> {
-    inline static bool fromValue(ValueReference value) {
-        return value->BooleanValue();
-    }
-
-    inline static Value toValue(bool value) {
-        return v8::Boolean::New(value);
-    }
-};
-
-template <>
-struct TypeCast<int> {
-    inline static int fromValue(ValueReference value) {
-        return value->Int32Value();
-    }
-
-    inline static Value toValue(int value) {
-        return v8::Integer::New(value);
-    }
-};
-
-template <>
-struct TypeCast<float> {
-    inline static float fromValue(ValueReference value) {
-        return value->NumberValue();
-    }
-
-    inline static Value toValue(float value) {
-        return v8::Number::New(value);
-    }
-};
-
-template <>
-struct TypeCast<std::string> {
-    inline static std::string fromValue(ValueReference value) {
-        const v8::String::Utf8Value utf8(value);
-        return *utf8;
-    }
-
-    inline static Value toValue(const std::string& value) {
-        return v8::String::New(value.c_str());
-    }
-};
-
-template <typename T>
-struct TypeCast<T*> {
-    inline static T* fromValue(ValueReference value) {
-        return cast(T, value->IntegerValue());
-    }
-
-    template <typename U>
-    inline static Value toValue(U* value) {
-        return v8::Number::New(asHandle(value));
-    }
-};
-
-inline Value undefined() {
-    return v8::Undefined();
+#if defined(F_RUNTIME_JAVASCRIPTCORE)
+namespace JSC {
+    using ::JSContextRef;
+    using ::JSObjectRef;
+    using ::JSStringRef;
+    using ::JSValueRef;
 }
 
-#elif defined(F_RUNTIME_SPIDERMONKEY)
-#elif defined(F_RUNTIME_JAVASCRIPTCORE)
-#endif
+typedef JSC::JSValueRef Value;
+typedef const JSC::JSValueRef ValueReference;
+typedef JSC::JSValueRef ScriptValue;
+typedef JSC::JSContextRef RuntimeContext;
+#endif  // F_RUNTIME_JAVASCRIPTCORE
+
+namespace internals {
+    extern RuntimeContext context;
+}
+#define F_RUNTIME_CONTEXT                       ::internals::context
+#define F_RUNTIME_STRINGARENA(arena, size)      char* arena = ::internals::StringArena_new(size);
 
 //----------------------------------------------------------------------------------------------
 // ClassType

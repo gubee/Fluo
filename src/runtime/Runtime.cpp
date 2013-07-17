@@ -5,13 +5,10 @@
  *      Author: gubee
  */
 
+#include "kernel/StringArena.h"
 #include "Runtime.h"
 
-#include "api/V8.h"
-#include "api/SpiderMonkey.h"
-#include "api/JavaScriptCore.h"
-
-#if !defined(F_RUNTIME_EMSCRIPTEN) && !defined(F_RUNTIME_FLASCC) && !defined(F_PLATFORM_ANDROID) // ##TODO
+#if !defined(F_RUNTIME_EMSCRIPTEN) && !defined(F_RUNTIME_FLASCC)
 namespace internals {
 #define F_API(function)     {#function, ::function}
 #define F_API_END           {0, 0}
@@ -99,4 +96,5 @@ Runtime::Runtime()
 }
 
 Runtime::~Runtime() {
+    internals::StringArena_delete();
 }

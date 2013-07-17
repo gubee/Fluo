@@ -13,7 +13,6 @@
 #include "kernel/StackFrame.h"
 #include "kernel/Iterator.h"
 #include "runtime/Runtime.h"
-#include "V8.h"
 
 //----------------------------------------------------------------------------------------------
 // StackFrame APIs
@@ -396,6 +395,8 @@ void ClassRegistry_classes(const v8::FunctionCallbackInfo<v8::Value>& arguments)
 
 //----------------------------------------------------------------------------------------------
 // class Runtime
+
+
 namespace internals {
     struct API {
         const char* name;
@@ -403,6 +404,8 @@ namespace internals {
     };
 
     extern API apis[];
+
+    v8::Isolate* context;
 }
 
 struct Runtime::Data {
@@ -424,6 +427,8 @@ void Runtime::startup() {
 
     m_data->context = v8::Context::New(isolate, 0, global);
     m_data->context->Enter();
+
+    internals::context = isolate;
 }
 
 void Runtime::shutdown() {
