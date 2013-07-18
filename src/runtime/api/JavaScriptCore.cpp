@@ -182,7 +182,6 @@ JSC::JSValueRef Map_names(JSC::JSContextRef context, JSC::JSObjectRef function, 
 JSC::JSValueRef Map_value(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
     Runtime::Context runtimeContext(context);
     const Map* map = cast(Map, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
-
     JSC::JSStringRef data = JSC::JSValueToStringCopy(context, arguments[1], 0);
     size_t size = JSC::JSStringGetMaximumUTF8CStringSize(data);
 
@@ -196,20 +195,25 @@ JSC::JSValueRef Map_value(JSC::JSContextRef context, JSC::JSObjectRef function, 
 //----------------------------------------------------------------------------------------------
 // Class APIs
 JSC::JSValueRef Class_new(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const v8::String::Utf8Value name(arguments[0]);
-//    char* className = new char[name.length() + 1];
-//    std::strcpy(className, *name);
-//    MetaClass* baseClass = cast(MetaClass, arguments[0]->IntegerValue());
-//
-//    MetaClass* metaClass = new MetaClass;
-//    metaClass->type = DynamicClass;
-//    metaClass->name = className;
-//    metaClass->base = baseClass;
-//    metaClass->create = &DynamicObject::create;
-//    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass)));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    JSC::JSStringRef data = JSC::JSValueToStringCopy(context, arguments[0], 0);
+    size_t size = JSC::JSStringGetMaximumUTF8CStringSize(data);
+
+    Runtime::Arena name(size);
+    size = JSC::JSStringGetUTF8CString(data, *name, size);
+    (*name)[size] = 0;
+    JSC::JSStringRelease(data);
+
+    char* className = new char[size + 1];
+    std::strcpy(className, *name);
+    MetaClass* baseClass = cast(MetaClass, asInteger(JSC::JSValueToNumber(context, arguments[1], 0)));
+
+    MetaClass* metaClass = new MetaClass;
+    metaClass->type = DynamicClass;
+    metaClass->name = className;
+    metaClass->base = baseClass;
+    metaClass->create = &DynamicObject::create;
+    return JSC::JSValueMakeNumber(context, asHandle(metaClass));
 }
 
 JSC::JSValueRef Class_defineMethod(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -228,106 +232,88 @@ JSC::JSValueRef Class_defineSignal(JSC::JSContextRef context, JSC::JSObjectRef f
 }
 
 JSC::JSValueRef Class_name(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-//    arguments.GetReturnValue().Set(v8::String::New(metaClass->name));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const MetaClass* metaClass = cast(MetaClass, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    JSC::JSStringRef data = JSC::JSStringCreateWithUTF8CString(metaClass->name);
+    JSC::JSValueRef result = JSC::JSValueMakeString(context, data);
+    JSC::JSStringRelease(data);
+    return result;
 }
 
 JSC::JSValueRef Class_base(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-//    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->base)));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const MetaClass* metaClass = cast(MetaClass, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    return JSC::JSValueMakeNumber(context, asHandle(metaClass->base));
 }
 
 JSC::JSValueRef Class_enumCount(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-//    arguments.GetReturnValue().Set(v8::Int32::New(metaClass->enums.size()));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const MetaClass* metaClass = cast(MetaClass, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    return JSC::JSValueMakeNumber(context, metaClass->enums.size());
 }
 
 JSC::JSValueRef Class_enum(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-//    std::size_t index = arguments[1]->Uint32Value();
-//    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->enums[index])));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const MetaClass* metaClass = cast(MetaClass, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    std::size_t index = asInteger(JSC::JSValueToNumber(context, arguments[1], 0));
+    return JSC::JSValueMakeNumber(context, asHandle(metaClass->enums[index]));
 }
 
 JSC::JSValueRef Class_methodCount(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-//    arguments.GetReturnValue().Set(v8::Uint32::New(metaClass->methods.size()));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const MetaClass* metaClass = cast(MetaClass, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    return JSC::JSValueMakeNumber(context, metaClass->methods.size());
 }
 
 JSC::JSValueRef Class_method(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-//    std::size_t index = arguments[1]->Uint32Value();
-//    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->methods[index])));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const MetaClass* metaClass = cast(MetaClass, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    std::size_t index = asInteger(JSC::JSValueToNumber(context, arguments[1], 0));
+    return JSC::JSValueMakeNumber(context, asHandle(metaClass->methods[index]));
 }
 
 JSC::JSValueRef Class_propertyCount(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-//    arguments.GetReturnValue().Set(v8::Int32::New(metaClass->properties.size()));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const MetaClass* metaClass = cast(MetaClass, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    return JSC::JSValueMakeNumber(context, metaClass->properties.size());
 }
 
 JSC::JSValueRef Class_property(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-//    std::size_t index = arguments[1]->Uint32Value();
-//    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->properties[index])));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const MetaClass* metaClass = cast(MetaClass, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    std::size_t index = asInteger(JSC::JSValueToNumber(context, arguments[1], 0));
+    return JSC::JSValueMakeNumber(context, asHandle(metaClass->properties[index]));
 }
 
 JSC::JSValueRef Class_signalCount(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-//    arguments.GetReturnValue().Set(v8::Int32::New(metaClass->signals.size()));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const MetaClass* metaClass = cast(MetaClass, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    return JSC::JSValueMakeNumber(context, metaClass->signals.size());
 }
 
 JSC::JSValueRef Class_signal(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-//    std::size_t index = arguments[1]->Uint32Value();
-//    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->signals[index])));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const MetaClass* metaClass = cast(MetaClass, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    std::size_t index = asInteger(JSC::JSValueToNumber(context, arguments[1], 0));
+    return JSC::JSValueMakeNumber(context, asHandle(metaClass->signals[index]));
 }
 
 //----------------------------------------------------------------------------------------------
 // Enum APIs
 JSC::JSValueRef Enum_name(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const MetaEnum* metaEnum = cast(MetaEnum, arguments[0]->IntegerValue());
-//    arguments.GetReturnValue().Set(v8::String::New(metaEnum->name));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const MetaEnum* metaEnum = cast(MetaEnum, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    JSC::JSStringRef data = JSC::JSStringCreateWithUTF8CString(metaEnum->name);
+    JSC::JSValueRef result = JSC::JSValueMakeString(context, data);
+    JSC::JSStringRelease(data);
+    return result;
 }
 
 JSC::JSValueRef Enum_values(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const MetaEnum* metaEnum = cast(MetaEnum, arguments[0]->IntegerValue());
-//    Iterator* iterator = newIterator(metaEnum->values);
-//    arguments.GetReturnValue().Set(v8::Number::New(asHandle(iterator)));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const MetaEnum* metaEnum = cast(MetaEnum, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    Iterator* iterator = newIterator(metaEnum->values);
+    return JSC::JSValueMakeNumber(context, asHandle(iterator));
 }
 
 //----------------------------------------------------------------------------------------------

@@ -167,7 +167,7 @@ void Class_new(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     const v8::String::Utf8Value name(arguments[0]);
     char* className = new char[name.length() + 1];
     std::strcpy(className, *name);
-    MetaClass* baseClass = cast(MetaClass, arguments[0]->IntegerValue());
+    MetaClass* baseClass = cast(MetaClass, arguments[1]->IntegerValue());
 
     MetaClass* metaClass = new MetaClass;
     metaClass->type = DynamicClass;
@@ -204,7 +204,7 @@ void Class_base(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
 void Class_enumCount(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     v8::HandleScope handleScope;
     const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-    arguments.GetReturnValue().Set(v8::Int32::New(metaClass->enums.size()));
+    arguments.GetReturnValue().Set(v8::Uint32::New(metaClass->enums.size()));
 }
 
 void Class_enum(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
@@ -224,13 +224,13 @@ void Class_method(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     v8::HandleScope handleScope;
     const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
     std::size_t index = arguments[1]->Uint32Value();
-    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->methods[index])));
+    arguments.GetReturnValue().Set(v8::Uint32::New(asHandle(metaClass->methods[index])));
 }
 
 void Class_propertyCount(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     v8::HandleScope handleScope;
     const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-    arguments.GetReturnValue().Set(v8::Int32::New(metaClass->properties.size()));
+    arguments.GetReturnValue().Set(v8::Uint32::New(metaClass->properties.size()));
 }
 
 void Class_property(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
@@ -243,7 +243,7 @@ void Class_property(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
 void Class_signalCount(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     v8::HandleScope handleScope;
     const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
-    arguments.GetReturnValue().Set(v8::Int32::New(metaClass->signals.size()));
+    arguments.GetReturnValue().Set(v8::Uint32::New(metaClass->signals.size()));
 }
 
 void Class_signal(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
