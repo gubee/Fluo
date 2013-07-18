@@ -33,7 +33,7 @@ namespace JSC {
 #endif  // F_RUNTIME_JAVASCRIPTCORE
 
 #include "CoreType.h"
-#include "StringArena.h"
+#include "Runtime.h"
 // TODO:
 #include "Point.h"
 //#include "Size.h"
@@ -129,51 +129,59 @@ inline Value undefined() {
 template <>
 struct TypeCast<bool> {
     inline static bool fromValue(ValueReference value) {
-        return JSC::JSValueToBoolean(F_RUNTIME_CONTEXT, value);
+        Runtime::Context context;
+        return JSC::JSValueToBoolean(*context, value);
     }
 
     inline static Value toValue(bool value) {
-        return JSC::JSValueMakeBoolean(F_RUNTIME_CONTEXT, value);
+        Runtime::Context context;
+        return JSC::JSValueMakeBoolean(*context, value);
     }
 };
 
 template <>
 struct TypeCast<int> {
     inline static int fromValue(ValueReference value) {
-        return JSC::JSValueToNumber(F_RUNTIME_CONTEXT, value, 0);
+        Runtime::Context context;
+        return JSC::JSValueToNumber(*context, value, 0);
     }
 
     inline static Value toValue(int value) {
-        return JSC::JSValueMakeNumber(F_RUNTIME_CONTEXT, value);
+        Runtime::Context context;
+        return JSC::JSValueMakeNumber(*context, value);
     }
 };
 
 template <>
 struct TypeCast<float> {
     inline static float fromValue(ValueReference value) {
-        return JSC::JSValueToNumber(F_RUNTIME_CONTEXT, value, 0);
+        Runtime::Context context;
+        return JSC::JSValueToNumber(*context, value, 0);
     }
 
     inline static Value toValue(float value) {
-        return JSC::JSValueMakeNumber(F_RUNTIME_CONTEXT, value);
+        Runtime::Context context;
+        return JSC::JSValueMakeNumber(*context, value);
     }
 };
 
 template <>
 struct TypeCast<std::string> {
     inline static std::string fromValue(ValueReference value) {
-        JSC::JSStringRef data = JSC::JSValueToStringCopy(F_RUNTIME_CONTEXT, value, 0);
+        Runtime::Context context;
+        JSC::JSStringRef data = JSC::JSValueToStringCopy(*context, value, 0);
         size_t bufferSize = JSC::JSStringGetMaximumUTF8CStringSize(data);
 
-        F_RUNTIME_STRINGARENA(buffer, bufferSize);
-        JSC::JSStringGetUTF8CString(data, buffer, bufferSize);
+        Runtime::Arena buffer(bufferSize);
+        JSC::JSStringGetUTF8CString(data, *buffer, bufferSize);
         JSC::JSStringRelease(data);
-        return buffer;
+        return *buffer;
     }
 
     inline static Value toValue(const std::string& value) {
+        Runtime::Context context;
         JSC::JSStringRef data = JSC::JSStringCreateWithUTF8CString(value.c_str());
-        JSC::JSValueRef result = JSC::JSValueMakeString(F_RUNTIME_CONTEXT, data);
+        JSC::JSValueRef result = JSC::JSValueMakeString(*context, data);
         JSC::JSStringRelease(data);
         return result;
     }
@@ -182,17 +190,20 @@ struct TypeCast<std::string> {
 template <typename T>
 struct TypeCast<T*> {
     inline static T* fromValue(ValueReference value) {
-        return cast(T, asInteger(JSC::JSValueToNumber(F_RUNTIME_CONTEXT, value, 0)));
+        Runtime::Context context;
+        return cast(T, asInteger(JSC::JSValueToNumber(*context, value, 0)));
     }
 
     template <typename U>
     inline static Value toValue(U* value) {
-        return JSC::JSValueMakeNumber(F_RUNTIME_CONTEXT, asHandle(value));
+        Runtime::Context context;
+        return JSC::JSValueMakeNumber(*context, asHandle(value));
     }
 };
 
 inline Value undefined() {
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    Runtime::Context context;
+    return JSC::JSValueMakeUndefined(*context);
 }
 
 #endif  // F_RUNTIME_JAVASCRIPTCORE

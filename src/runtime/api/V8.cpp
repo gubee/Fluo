@@ -12,7 +12,8 @@
 #include "kernel/ClassRegistry.h"
 #include "kernel/StackFrame.h"
 #include "kernel/Iterator.h"
-#include "runtime/Runtime.h"
+#include "kernel/Runtime.h"
+#include "runtime/API.h"
 
 //----------------------------------------------------------------------------------------------
 // StackFrame APIs

@@ -1,12 +1,11 @@
 /*
- * Runtime.cpp
+ * API.cpp
  *
  *  Created on: 2013. 6. 27.
  *      Author: gubee
  */
 
-#include "kernel/StringArena.h"
-#include "Runtime.h"
+#include "API.h"
 
 #if !defined(F_RUNTIME_EMSCRIPTEN) && !defined(F_RUNTIME_FLASCC)
 namespace internals {
@@ -90,11 +89,3 @@ namespace internals {
     };
 }
 #endif  // !defined(F_RUNTIME_EMSCRIPTEN) && !defined(F_RUNTIME_FLASCC)
-
-Runtime::Runtime()
-    : m_data(0) {
-}
-
-Runtime::~Runtime() {
-    internals::StringArena_delete();
-}

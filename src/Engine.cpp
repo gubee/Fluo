@@ -6,7 +6,7 @@
  */
 
 #include "Engine.h"
-#include "runtime/Runtime.h"
+#include "kernel/Runtime.h"
 
 Engine::Engine()
     : m_runtime(new Runtime()) {

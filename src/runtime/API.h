@@ -1,12 +1,12 @@
 /*
- * Runtime.h
+ * API.h
  *
  *  Created on: 2013. 6. 27.
  *      Author: gubee
  */
 
-#ifndef RUNTIME_H_
-#define RUNTIME_H_
+#ifndef RUNTIME_API_H_
+#define RUNTIME_API_H_
 
 #include "kernel/CoreType.h"
 
@@ -133,20 +133,4 @@ F_RUNTIME_API(const List*, ClassRegistry_classes)();
 // Script APIs
 // TODO:
 
-//----------------------------------------------------------------------------------------------
-// class Runtime
-class Runtime {
-public:
-    Runtime();
-    ~Runtime();
-
-    void startup();
-    void shutdown();
-    void runScript(const char* source);
-
-private:
-    struct Data;
-    Data* m_data;
-};
-
-#endif /* RUNTIME_H_ */
+#endif /* RUNTIME_API_H_ */

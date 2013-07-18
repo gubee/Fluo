@@ -8,7 +8,7 @@
 #ifndef RECT_H_
 #define RECT_H_
 
-#include "Util.h"
+#include "Utils.h"
 #include "Point.h"
 
 struct Rect {
@@ -18,13 +18,11 @@ struct Rect {
     float height;
 
     Rect()
-        : x(0), y(0), width(0), height(0)
-    {
+        : x(0), y(0), width(0), height(0) {
     }
 
     Rect(float x, float y, float width, float height)
-        : x(x), y(y), width(width), height(height)
-    {
+        : x(x), y(y), width(width), height(height) {
     }
 
     Rect clone() const;
@@ -59,7 +57,6 @@ struct Rect {
 
     friend inline bool operator==(const Rect&, const Rect&);
     friend inline bool operator!=(const Rect&, const Rect&);
-
 };
 
 inline Rect Rect::clone() const {
@@ -112,14 +109,12 @@ inline Rect& Rect::moveCenter(const Point& point) {
     return *this;
 }
 
-inline Rect& Rect::operator|=(const Rect &r)
-    {
+inline Rect& Rect::operator|=(const Rect &r) {
     *this = *this | r;
     return *this;
 }
 
-inline Rect& Rect::operator&=(const Rect &r)
-    {
+inline Rect& Rect::operator&=(const Rect &r) {
     *this = *this & r;
     return *this;
 }

@@ -12,7 +12,8 @@
 #include "kernel/ClassRegistry.h"
 #include "kernel/StackFrame.h"
 #include "kernel/Iterator.h"
-#include "runtime/Runtime.h"
+#include "kernel/Runtime.h"
+#include "runtime/API.h"
 
 //----------------------------------------------------------------------------------------------
 // StackFrame APIs
@@ -20,20 +21,20 @@ JSC::JSValueRef StackFrame_top(JSC::JSContextRef context, JSC::JSObjectRef funct
 //    v8::HandleScope handleScope;
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(internals::StackFrame_top())));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef StackFrame_push(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
 //    v8::HandleScope handleScope;
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(internals::StackFrame_push())));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef StackFrame_pop(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
 //    internals::StackFrame_pop();
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 //----------------------------------------------------------------------------------------------
@@ -43,7 +44,7 @@ JSC::JSValueRef Iterator_delete(JSC::JSContextRef context, JSC::JSObjectRef func
 //    Iterator* iterator = cast(Iterator, arguments[0]->IntegerValue());
 //    delete iterator;
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Iterator_name(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -51,7 +52,7 @@ JSC::JSValueRef Iterator_name(JSC::JSContextRef context, JSC::JSObjectRef functi
 //    Iterator* iterator = cast(Iterator, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::String::New(iterator->name()));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Iterator_value(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -59,7 +60,7 @@ JSC::JSValueRef Iterator_value(JSC::JSContextRef context, JSC::JSObjectRef funct
 //    Iterator* iterator = cast(Iterator, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(iterator->value());
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Iterator_next(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -67,7 +68,7 @@ JSC::JSValueRef Iterator_next(JSC::JSContextRef context, JSC::JSObjectRef functi
 //    Iterator* iterator = cast(Iterator, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::Boolean::New(iterator->next()));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 //----------------------------------------------------------------------------------------------
@@ -77,7 +78,7 @@ JSC::JSValueRef List_new(JSC::JSContextRef context, JSC::JSObjectRef function, J
 //    List* list = List::newInstance((Type)arguments[0]->Int32Value());
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(list)));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef List_delete(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -85,7 +86,7 @@ JSC::JSValueRef List_delete(JSC::JSContextRef context, JSC::JSObjectRef function
 //    List* list = cast(List, arguments[0]->IntegerValue());
 //    delete list;
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef List_append(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -93,7 +94,7 @@ JSC::JSValueRef List_append(JSC::JSContextRef context, JSC::JSObjectRef function
 //    List* list = cast(List, arguments[0]->IntegerValue());
 //    list->append(arguments[1]);
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef List_remove(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -101,7 +102,7 @@ JSC::JSValueRef List_remove(JSC::JSContextRef context, JSC::JSObjectRef function
 //    List* list = cast(List, arguments[0]->IntegerValue());
 //    list->remove(arguments[1], arguments.Length() > 2 ? arguments[2]->BooleanValue() : false);
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef List_removeAt(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -109,7 +110,7 @@ JSC::JSValueRef List_removeAt(JSC::JSContextRef context, JSC::JSObjectRef functi
 //    List* list = cast(List, arguments[0]->IntegerValue());
 //    list->append(arguments[1]);
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef List_count(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -117,7 +118,7 @@ JSC::JSValueRef List_count(JSC::JSContextRef context, JSC::JSObjectRef function,
 //    const List* list = cast(List, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::Int32::New(list->count()));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef List_indexOf(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -125,7 +126,7 @@ JSC::JSValueRef List_indexOf(JSC::JSContextRef context, JSC::JSObjectRef functio
 //    const List* list = cast(List, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::Int32::New(list->indexOf(arguments[1])));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef List_at(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -133,7 +134,7 @@ JSC::JSValueRef List_at(JSC::JSContextRef context, JSC::JSObjectRef function, JS
 //    const List* list = cast(List, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(list->at(arguments[1]->Int32Value()));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef List_setAt(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -141,7 +142,7 @@ JSC::JSValueRef List_setAt(JSC::JSContextRef context, JSC::JSObjectRef function,
 //    List* list = cast(List, arguments[0]->IntegerValue());
 //    list->setAt(arguments[1]->Int32Value(), arguments[2]);
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 //----------------------------------------------------------------------------------------------
@@ -151,7 +152,7 @@ JSC::JSValueRef Map_new(JSC::JSContextRef context, JSC::JSObjectRef function, JS
 //    Map* map = Map::newInstance((Type)arguments[0]->Int32Value());
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(map)));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Map_delete(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -159,7 +160,7 @@ JSC::JSValueRef Map_delete(JSC::JSContextRef context, JSC::JSObjectRef function,
 //    Map* map = cast(Map, arguments[0]->IntegerValue());
 //    delete map;
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Map_insert(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -168,7 +169,7 @@ JSC::JSValueRef Map_insert(JSC::JSContextRef context, JSC::JSObjectRef function,
 //    const v8::String::Utf8Value name(arguments[1]);
 //    map->insert(*name, arguments[2]);
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Map_remove(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -177,7 +178,7 @@ JSC::JSValueRef Map_remove(JSC::JSContextRef context, JSC::JSObjectRef function,
 //    const v8::String::Utf8Value name(arguments[1]);
 //    map->remove(*name);
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Map_count(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -185,7 +186,7 @@ JSC::JSValueRef Map_count(JSC::JSContextRef context, JSC::JSObjectRef function, 
 //    const Map* map = cast(Map, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::Int32::New(map->count()));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Map_names(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -193,7 +194,7 @@ JSC::JSValueRef Map_names(JSC::JSContextRef context, JSC::JSObjectRef function, 
 //    const Map* map = cast(Map, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(map->names())));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Map_value(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -202,7 +203,7 @@ JSC::JSValueRef Map_value(JSC::JSContextRef context, JSC::JSObjectRef function, 
 //    const v8::String::Utf8Value name(arguments[1]);
 //    arguments.GetReturnValue().Set(map->value(*name));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 //----------------------------------------------------------------------------------------------
@@ -221,22 +222,22 @@ JSC::JSValueRef Class_new(JSC::JSContextRef context, JSC::JSObjectRef function, 
 //    metaClass->create = &DynamicObject::create;
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass)));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Class_defineMethod(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Class_defineProperty(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Class_defineSignal(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Class_name(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -244,7 +245,7 @@ JSC::JSValueRef Class_name(JSC::JSContextRef context, JSC::JSObjectRef function,
 //    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::String::New(metaClass->name));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Class_base(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -252,7 +253,7 @@ JSC::JSValueRef Class_base(JSC::JSContextRef context, JSC::JSObjectRef function,
 //    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->base)));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Class_enumCount(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -260,7 +261,7 @@ JSC::JSValueRef Class_enumCount(JSC::JSContextRef context, JSC::JSObjectRef func
 //    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::Int32::New(metaClass->enums.size()));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Class_enum(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -269,7 +270,7 @@ JSC::JSValueRef Class_enum(JSC::JSContextRef context, JSC::JSObjectRef function,
 //    std::size_t index = arguments[1]->Uint32Value();
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->enums[index])));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Class_methodCount(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -277,7 +278,7 @@ JSC::JSValueRef Class_methodCount(JSC::JSContextRef context, JSC::JSObjectRef fu
 //    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::Uint32::New(metaClass->methods.size()));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Class_method(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -286,7 +287,7 @@ JSC::JSValueRef Class_method(JSC::JSContextRef context, JSC::JSObjectRef functio
 //    std::size_t index = arguments[1]->Uint32Value();
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->methods[index])));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Class_propertyCount(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -294,7 +295,7 @@ JSC::JSValueRef Class_propertyCount(JSC::JSContextRef context, JSC::JSObjectRef 
 //    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::Int32::New(metaClass->properties.size()));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Class_property(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -303,7 +304,7 @@ JSC::JSValueRef Class_property(JSC::JSContextRef context, JSC::JSObjectRef funct
 //    std::size_t index = arguments[1]->Uint32Value();
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->properties[index])));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Class_signalCount(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -311,7 +312,7 @@ JSC::JSValueRef Class_signalCount(JSC::JSContextRef context, JSC::JSObjectRef fu
 //    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::Int32::New(metaClass->signals.size()));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Class_signal(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -320,7 +321,7 @@ JSC::JSValueRef Class_signal(JSC::JSContextRef context, JSC::JSObjectRef functio
 //    std::size_t index = arguments[1]->Uint32Value();
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass->signals[index])));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 //----------------------------------------------------------------------------------------------
@@ -330,7 +331,7 @@ JSC::JSValueRef Enum_name(JSC::JSContextRef context, JSC::JSObjectRef function, 
 //    const MetaEnum* metaEnum = cast(MetaEnum, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::String::New(metaEnum->name));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Enum_values(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -339,7 +340,7 @@ JSC::JSValueRef Enum_values(JSC::JSContextRef context, JSC::JSObjectRef function
 //    Iterator* iterator = newIterator(metaEnum->values);
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(iterator)));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 //----------------------------------------------------------------------------------------------
@@ -349,7 +350,7 @@ JSC::JSValueRef Method_name(JSC::JSContextRef context, JSC::JSObjectRef function
 //    const MetaMethod* metaMethod = cast(MetaMethod, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::String::New(metaMethod->name));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Method_call(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -357,7 +358,7 @@ JSC::JSValueRef Method_call(JSC::JSContextRef context, JSC::JSObjectRef function
 //    const MetaMethod* metaMethod = cast(MetaMethod, arguments[0]->IntegerValue());
 //    metaMethod->function->invoke();
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 //----------------------------------------------------------------------------------------------
@@ -367,7 +368,7 @@ JSC::JSValueRef Property_name(JSC::JSContextRef context, JSC::JSObjectRef functi
 //    const MetaProperty* metaProperty = cast(MetaProperty, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::String::New(metaProperty->name));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Property_type(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -375,7 +376,7 @@ JSC::JSValueRef Property_type(JSC::JSContextRef context, JSC::JSObjectRef functi
 //    const MetaProperty* metaProperty = cast(MetaProperty, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::Uint32::New(metaProperty->type));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Property_isReadOnly(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -383,7 +384,7 @@ JSC::JSValueRef Property_isReadOnly(JSC::JSContextRef context, JSC::JSObjectRef 
 //    const MetaProperty* metaProperty = cast(MetaProperty, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::Boolean::New(metaProperty->setter != 0));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Property_read(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -391,7 +392,7 @@ JSC::JSValueRef Property_read(JSC::JSContextRef context, JSC::JSObjectRef functi
 //    const MetaProperty* metaProperty = cast(MetaProperty, arguments[0]->IntegerValue());
 //    metaProperty->getter->invoke();
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Property_write(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -403,7 +404,7 @@ JSC::JSValueRef Property_write(JSC::JSContextRef context, JSC::JSObjectRef funct
 //    }
 //    metaProperty->setter->invoke();
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 //----------------------------------------------------------------------------------------------
@@ -413,7 +414,7 @@ JSC::JSValueRef Signal_name(JSC::JSContextRef context, JSC::JSObjectRef function
 //    const MetaSignal* metaSignal = cast(MetaSignal, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::String::New(metaSignal->name));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Signal_connect(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -424,7 +425,7 @@ JSC::JSValueRef Signal_connect(JSC::JSContextRef context, JSC::JSObjectRef funct
 //    const MetaMethod* metaMethod = cast(MetaMethod, arguments[3]->IntegerValue());
 //    internals::Signal_connect(metaSignal->indexer, sender, receiver, metaMethod);
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Signal_disconnect(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -435,7 +436,7 @@ JSC::JSValueRef Signal_disconnect(JSC::JSContextRef context, JSC::JSObjectRef fu
 //    const MetaMethod* metaMethod = cast(MetaMethod, arguments[3]->IntegerValue());
 //    internals::Signal_disconnect(metaSignal->indexer, sender, receiver, metaMethod);
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Signal_emit(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -444,7 +445,7 @@ JSC::JSValueRef Signal_emit(JSC::JSContextRef context, JSC::JSObjectRef function
 //    Object* sender = cast(Object, arguments[1]->IntegerValue());
 //    internals::Signal_emit(metaSignal->indexer, sender);
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 //----------------------------------------------------------------------------------------------
@@ -455,7 +456,7 @@ JSC::JSValueRef Object_new(JSC::JSContextRef context, JSC::JSObjectRef function,
 //    Object* object = metaClass->create(metaClass);
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(object)));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Object_delete(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -463,7 +464,7 @@ JSC::JSValueRef Object_delete(JSC::JSContextRef context, JSC::JSObjectRef functi
 //    const Object* object = cast(Object, arguments[0]->IntegerValue());
 //    delete object;
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Object_class(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -471,7 +472,7 @@ JSC::JSValueRef Object_class(JSC::JSContextRef context, JSC::JSObjectRef functio
 //    const Object* object = cast(Object, arguments[0]->IntegerValue());
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(object->metaClass())));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 //----------------------------------------------------------------------------------------------
@@ -480,7 +481,7 @@ JSC::JSValueRef ClassRegistry_register(JSC::JSContextRef context, JSC::JSObjectR
 //    const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
 //    ClassRegistry::instance().registerClass(metaClass);
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef ClassRegistry_class(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
@@ -488,14 +489,14 @@ JSC::JSValueRef ClassRegistry_class(JSC::JSContextRef context, JSC::JSObjectRef 
 //    const MetaClass* metaClass = ClassRegistry::instance().findClass(*name);
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass)));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef ClassRegistry_classes(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
 //    Iterator* iterator = newIterator(ClassRegistry::instance().registeredClasses());
 //    arguments.GetReturnValue().Set(v8::Number::New(asHandle(iterator)));
     // TODO:
-    return JSC::JSValueMakeUndefined(F_RUNTIME_CONTEXT);
+    return JSC::JSValueMakeUndefined(context);
 }
 
 //----------------------------------------------------------------------------------------------

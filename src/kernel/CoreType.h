@@ -72,7 +72,7 @@ typedef intptr_t Handle;
 typedef void* Value;
 typedef void* ValueReference;
 // TODO: ScriptValue
-typedef void* RuntimeContext;
+typedef void* ExecutionContext;
 #endif  // F_RUNTIME_EMSCRIPTEN
 
 #if defined(F_RUNTIME_FLASCC)
@@ -83,14 +83,14 @@ typedef void* RuntimeContext;
 typedef v8::Handle<v8::Value> Value;
 typedef const v8::Handle<v8::Value>& ValueReference;
 typedef v8::Handle<v8::Value> ScriptValue;
-typedef v8::Isolate* RuntimeContext;
+typedef v8::Isolate* ExecutionContext;
 #endif  // F_RUNTIME_V8
 
 #if defined(F_RUNTIME_SPIDERMONKEY)
 typedef JS::Value Value;
 typedef const JS::Value& ValueReference;
 typedef JS::Value ScriptValue;
-// TODO: RuntimeContext
+// TODO: ExecutionContext
 #endif  // F_RUNTIME_SPIDERMONKEY
 
 #if defined(F_RUNTIME_JAVASCRIPTCORE)
@@ -104,14 +104,8 @@ namespace JSC {
 typedef JSC::JSValueRef Value;
 typedef const JSC::JSValueRef ValueReference;
 typedef JSC::JSValueRef ScriptValue;
-typedef JSC::JSContextRef RuntimeContext;
+typedef JSC::JSContextRef ExecutionContext;
 #endif  // F_RUNTIME_JAVASCRIPTCORE
-
-namespace internals {
-    extern RuntimeContext context;
-}
-#define F_RUNTIME_CONTEXT                       ::internals::context
-#define F_RUNTIME_STRINGARENA(arena, size)      char* arena = ::internals::StringArena_new(size);
 
 //----------------------------------------------------------------------------------------------
 // ClassType
