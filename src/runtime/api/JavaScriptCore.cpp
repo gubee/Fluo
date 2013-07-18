@@ -18,192 +18,179 @@
 //----------------------------------------------------------------------------------------------
 // StackFrame APIs
 JSC::JSValueRef StackFrame_top(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    arguments.GetReturnValue().Set(v8::Number::New(asHandle(internals::StackFrame_top())));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    return JSC::JSValueMakeNumber(context, asHandle(internals::StackFrame_top()));
 }
 
 JSC::JSValueRef StackFrame_push(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    arguments.GetReturnValue().Set(v8::Number::New(asHandle(internals::StackFrame_push())));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    return JSC::JSValueMakeNumber(context, asHandle(internals::StackFrame_push()));
 }
 
 JSC::JSValueRef StackFrame_pop(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    internals::StackFrame_pop();
-    // TODO:
+    Runtime::Context runtimeContext(context);
+    internals::StackFrame_pop();
     return JSC::JSValueMakeUndefined(context);
 }
 
 //----------------------------------------------------------------------------------------------
 // Iterator APIs
 JSC::JSValueRef Iterator_delete(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    Iterator* iterator = cast(Iterator, arguments[0]->IntegerValue());
-//    delete iterator;
-    // TODO:
+    Runtime::Context runtimeContext(context);
+    Iterator* iterator = cast(Iterator, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    delete iterator;
     return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Iterator_name(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    Iterator* iterator = cast(Iterator, arguments[0]->IntegerValue());
-//    arguments.GetReturnValue().Set(v8::String::New(iterator->name()));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    Iterator* iterator = cast(Iterator, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    JSC::JSStringRef data = JSC::JSStringCreateWithUTF8CString(iterator->name());
+    JSC::JSValueRef result = JSC::JSValueMakeString(context, data);
+    JSC::JSStringRelease(data);
+    return result;
 }
 
 JSC::JSValueRef Iterator_value(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    Iterator* iterator = cast(Iterator, arguments[0]->IntegerValue());
-//    arguments.GetReturnValue().Set(iterator->value());
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    Iterator* iterator = cast(Iterator, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    return iterator->value();
 }
 
 JSC::JSValueRef Iterator_next(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    Iterator* iterator = cast(Iterator, arguments[0]->IntegerValue());
-//    arguments.GetReturnValue().Set(v8::Boolean::New(iterator->next()));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    Iterator* iterator = cast(Iterator, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    return JSC::JSValueMakeBoolean(context, iterator->next());
 }
 
 //----------------------------------------------------------------------------------------------
 // List APIs
 JSC::JSValueRef List_new(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    List* list = List::newInstance((Type)arguments[0]->Int32Value());
-//    arguments.GetReturnValue().Set(v8::Number::New(asHandle(list)));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    List* list = List::newInstance((Type)JSC::JSValueToNumber(context, arguments[0], 0));
+    return JSC::JSValueMakeNumber(context, asHandle(list));
 }
 
 JSC::JSValueRef List_delete(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    List* list = cast(List, arguments[0]->IntegerValue());
-//    delete list;
-    // TODO:
+    Runtime::Context runtimeContext(context);
+    List* list = cast(List, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    delete list;
     return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef List_append(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    List* list = cast(List, arguments[0]->IntegerValue());
-//    list->append(arguments[1]);
-    // TODO:
+    Runtime::Context runtimeContext(context);
+    List* list = cast(List, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    list->append(arguments[1]);
     return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef List_remove(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    List* list = cast(List, arguments[0]->IntegerValue());
-//    list->remove(arguments[1], arguments.Length() > 2 ? arguments[2]->BooleanValue() : false);
-    // TODO:
+    Runtime::Context runtimeContext(context);
+    List* list = cast(List, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    list->remove(arguments[1], argumentCount > 2 ? JSC::JSValueToBoolean(context, arguments[2]) : false);
     return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef List_removeAt(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    List* list = cast(List, arguments[0]->IntegerValue());
-//    list->append(arguments[1]);
-    // TODO:
+    Runtime::Context runtimeContext(context);
+    List* list = cast(List, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    list->removeAt(asInteger(JSC::JSValueToNumber(context, arguments[1], 0)));
     return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef List_count(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const List* list = cast(List, arguments[0]->IntegerValue());
-//    arguments.GetReturnValue().Set(v8::Int32::New(list->count()));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const List* list = cast(List, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    return JSC::JSValueMakeNumber(context, list->count());
 }
 
 JSC::JSValueRef List_indexOf(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const List* list = cast(List, arguments[0]->IntegerValue());
-//    arguments.GetReturnValue().Set(v8::Int32::New(list->indexOf(arguments[1])));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const List* list = cast(List, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    return JSC::JSValueMakeNumber(context, list->indexOf(arguments[1]));
 }
 
 JSC::JSValueRef List_at(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const List* list = cast(List, arguments[0]->IntegerValue());
-//    arguments.GetReturnValue().Set(list->at(arguments[1]->Int32Value()));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const List* list = cast(List, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    return list->at(asInteger(JSC::JSValueToNumber(context, arguments[1], 0)));
 }
 
 JSC::JSValueRef List_setAt(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    List* list = cast(List, arguments[0]->IntegerValue());
-//    list->setAt(arguments[1]->Int32Value(), arguments[2]);
-    // TODO:
+    Runtime::Context runtimeContext(context);
+    List* list = cast(List, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    list->setAt(asInteger(JSC::JSValueToNumber(context, arguments[1], 0)), arguments[2]);
     return JSC::JSValueMakeUndefined(context);
 }
 
 //----------------------------------------------------------------------------------------------
 // Map APIs
 JSC::JSValueRef Map_new(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    Map* map = Map::newInstance((Type)arguments[0]->Int32Value());
-//    arguments.GetReturnValue().Set(v8::Number::New(asHandle(map)));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    Map* map = Map::newInstance((Type)asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    return JSC::JSValueMakeNumber(context, asHandle(map));
 }
 
 JSC::JSValueRef Map_delete(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    Map* map = cast(Map, arguments[0]->IntegerValue());
-//    delete map;
-    // TODO:
+    Runtime::Context runtimeContext(context);
+    Map* map = cast(Map, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    delete map;
     return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Map_insert(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    Map* map = cast(Map, arguments[0]->IntegerValue());
-//    const v8::String::Utf8Value name(arguments[1]);
-//    map->insert(*name, arguments[2]);
-    // TODO:
+    Runtime::Context runtimeContext(context);
+    Map* map = cast(Map, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    JSC::JSStringRef data = JSC::JSValueToStringCopy(context, arguments[1], 0);
+    size_t size = JSC::JSStringGetMaximumUTF8CStringSize(data);
+
+    Runtime::Arena name(size);
+    size = JSC::JSStringGetUTF8CString(data, *name, size);
+    (*name)[size] = 0;
+    JSC::JSStringRelease(data);
+    map->insert(*name, arguments[2]);
     return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Map_remove(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    Map* map = cast(Map, arguments[0]->IntegerValue());
-//    const v8::String::Utf8Value name(arguments[1]);
-//    map->remove(*name);
-    // TODO:
+    Runtime::Context runtimeContext(context);
+    Map* map = cast(Map, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    JSC::JSStringRef data = JSC::JSValueToStringCopy(context, arguments[1], 0);
+    size_t size = JSC::JSStringGetMaximumUTF8CStringSize(data);
+
+    Runtime::Arena name(size);
+    size = JSC::JSStringGetUTF8CString(data, *name, size);
+    (*name)[size] = 0;
+    JSC::JSStringRelease(data);
+    map->remove(*name);
     return JSC::JSValueMakeUndefined(context);
 }
 
 JSC::JSValueRef Map_count(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const Map* map = cast(Map, arguments[0]->IntegerValue());
-//    arguments.GetReturnValue().Set(v8::Int32::New(map->count()));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const Map* map = cast(Map, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    return JSC::JSValueMakeNumber(context, map->count());
 }
 
 JSC::JSValueRef Map_names(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const Map* map = cast(Map, arguments[0]->IntegerValue());
-//    arguments.GetReturnValue().Set(v8::Number::New(asHandle(map->names())));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const Map* map = cast(Map, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+    return JSC::JSValueMakeNumber(context, asHandle(map->names()));
 }
 
 JSC::JSValueRef Map_value(JSC::JSContextRef context, JSC::JSObjectRef function, JSC::JSObjectRef thisObject, size_t argumentCount, const JSC::JSValueRef arguments[], JSC::JSValueRef*) {
-//    v8::HandleScope handleScope;
-//    const Map* map = cast(Map, arguments[0]->IntegerValue());
-//    const v8::String::Utf8Value name(arguments[1]);
-//    arguments.GetReturnValue().Set(map->value(*name));
-    // TODO:
-    return JSC::JSValueMakeUndefined(context);
+    Runtime::Context runtimeContext(context);
+    const Map* map = cast(Map, asInteger(JSC::JSValueToNumber(context, arguments[0], 0)));
+
+    JSC::JSStringRef data = JSC::JSValueToStringCopy(context, arguments[1], 0);
+    size_t size = JSC::JSStringGetMaximumUTF8CStringSize(data);
+
+    Runtime::Arena name(size);
+    size = JSC::JSStringGetUTF8CString(data, *name, size);
+    (*name)[size] = 0;
+    JSC::JSStringRelease(data);
+    return map->value(*name);
 }
 
 //----------------------------------------------------------------------------------------------

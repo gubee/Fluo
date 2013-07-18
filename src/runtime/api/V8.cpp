@@ -86,7 +86,7 @@ void List_remove(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
 void List_removeAt(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
     v8::HandleScope handleScope;
     List* list = cast(List, arguments[0]->IntegerValue());
-    list->append(arguments[1]);
+    list->removeAt(arguments[1]->IntegerValue());
 }
 
 void List_count(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
@@ -405,8 +405,6 @@ namespace internals {
     };
 
     extern API apis[];
-
-    v8::Isolate* context;
 }
 
 struct Runtime::Data {
@@ -428,8 +426,6 @@ void Runtime::startup() {
 
     m_data->context = v8::Context::New(isolate, 0, global);
     m_data->context->Enter();
-
-    internals::context = isolate;
 }
 
 void Runtime::shutdown() {

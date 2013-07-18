@@ -170,12 +170,13 @@ struct TypeCast<std::string> {
     inline static std::string fromValue(ValueReference value) {
         Runtime::Context context;
         JSC::JSStringRef data = JSC::JSValueToStringCopy(*context, value, 0);
-        size_t bufferSize = JSC::JSStringGetMaximumUTF8CStringSize(data);
+        size_t size = JSC::JSStringGetMaximumUTF8CStringSize(data);
 
-        Runtime::Arena buffer(bufferSize);
-        JSC::JSStringGetUTF8CString(data, *buffer, bufferSize);
+        Runtime::Arena arena(size);
+        size = JSC::JSStringGetUTF8CString(data, *arena, size);
         JSC::JSStringRelease(data);
-        return *buffer;
+        (*arena)[size] = 0;
+        return *arena;
     }
 
     inline static Value toValue(const std::string& value) {
