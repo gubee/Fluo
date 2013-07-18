@@ -375,17 +375,20 @@ void Object_class(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
 //----------------------------------------------------------------------------------------------
 // ClassRegistry APIs
 void ClassRegistry_register(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
     const MetaClass* metaClass = cast(MetaClass, arguments[0]->IntegerValue());
     ClassRegistry::instance().registerClass(metaClass);
 }
 
 void ClassRegistry_class(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
     const v8::String::Utf8Value name(arguments[0]);
     const MetaClass* metaClass = ClassRegistry::instance().findClass(*name);
     arguments.GetReturnValue().Set(v8::Number::New(asHandle(metaClass)));
 }
 
 void ClassRegistry_classes(const v8::FunctionCallbackInfo<v8::Value>& arguments) {
+    v8::HandleScope handleScope;
     Iterator* iterator = newIterator(ClassRegistry::instance().registeredClasses());
     arguments.GetReturnValue().Set(v8::Number::New(asHandle(iterator)));
 }
@@ -409,6 +412,7 @@ namespace internals {
 
 struct Runtime::Data {
     v8::Handle<v8::Context> context;
+    v8::Handle<v8::ObjectTemplate> global;
 };
 
 void Runtime::startup() {
@@ -425,6 +429,7 @@ void Runtime::startup() {
     }
 
     m_data->context = v8::Context::New(isolate, 0, global);
+    m_data->global = global;
     m_data->context->Enter();
 }
 

@@ -95,6 +95,7 @@ typedef JS::Value ScriptValue;
 
 #if defined(F_RUNTIME_JAVASCRIPTCORE)
 namespace JSC {
+    using ::JSGlobalContextRef;
     using ::JSContextRef;
     using ::JSObjectRef;
     using ::JSStringRef;

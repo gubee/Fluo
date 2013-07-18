@@ -101,6 +101,7 @@ int main() {
     engine.startup();
 
     const char* ss = "var m = Class_new('ABC', 0); Class_name(m);";
+    engine.runScript(ss);
 
 	List* lb = new BoolList();
     List* li = new IntList();
